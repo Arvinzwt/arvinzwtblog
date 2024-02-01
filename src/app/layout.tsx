@@ -1,5 +1,5 @@
 import "@/components/globals.css";
-import {inter} from "@/components/font/fonts";
+import {monaco} from "@/components/font/fonts";
 
 export default function RootLayout({
   children,
@@ -8,7 +8,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`}>{children}</body>
+      <body className={`${monaco.className} antialiased`}>{children}</body>
     </html>
   );
 }
