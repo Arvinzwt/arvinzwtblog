@@ -10,8 +10,8 @@ export const lusitana = Lusitana({
   subsets: ['latin'],
 });
 
-export const xinDiZhaoMeng = localFont({
-  src: './XinDiZhaoMeng-1.otf',
+export const XinDiZhaoMengFu = localFont({
+  src: './XinDiZhaoMengFu-1.otf',
   display: 'swap',
 })
 

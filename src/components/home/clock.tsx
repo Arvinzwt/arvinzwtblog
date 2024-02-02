@@ -1,110 +1,145 @@
 'use client';
-import React, {useEffect, useRef} from 'react';
-import * as d3 from "d3";
-import graph from './graph.json'
+import React, {useEffect, useRef, useState} from 'react';
 
 export default function Clock() {
-  const data = graph
-  const width = 928;
-  const height = 680;
   const svgRef = useRef(null);
   const initialized = useRef(false);
+  let animationFrameId;
+  const windowSize = {
+    width: 300,
+    height: 600,
+  }
+
+  const [data, setData] = useState([]);
+  const [currentTime, setCurrentTime] = useState('88:88');
 
   useEffect(() => {
     if (!initialized.current) {
       initialized.current = true;
-
-      console.log('执行了几次？')
-
-      const svg = d3.select(svgRef.current);
-
-      // Specify the color scale.
-      const color = d3.scaleOrdinal(d3.schemeCategory10);
-
-      // The force simulation mutates links and nodes, so create a copy
-      // so that re-evaluating this cell produces the same result.
-      const links = data.links.map(d => ({...d}));
-      const nodes = data.nodes.map(d => ({...d}));
-
-      // Create a simulation with several forces.
-      const simulation = d3.forceSimulation(nodes)
-        .force("link", d3.forceLink(links).id(d => d.id))
-        .force("charge", d3.forceManyBody())
-        .force("x", d3.forceX())
-        .force("y", d3.forceY());
-
-      // Create the SVG container.
-      // const svg = d3.create("svg")
-      //   .attr("width", width)
-      //   .attr("height", height)
-      //   .attr("viewBox", [-width / 2, -height / 2, width, height])
-      //   .attr("style", "max-width: 100%; height: auto;");
-
-      // Add a line for each link, and a circle for each node.
-      const link = svg.append("g")
-        .attr("stroke", "#999")
-        .attr("stroke-opacity", 0.6)
-        .selectAll("line")
-        .data(links)
-        .join("line")
-        .attr("stroke-width", d => Math.sqrt(d.value));
-
-      const node = svg.append("g")
-        .attr("stroke", "#fff")
-        .attr("stroke-width", 1.5)
-        .selectAll("circle")
-        .data(nodes)
-        .join("circle")
-        .attr("r", 5)
-        .attr("fill", d => color(d.group));
-
-      node.append("title")
-        .text(d => d.id);
-
-      // Add a drag behavior.
-      node.call(d3.drag()
-        .on("start", function dragstarted(event) {
-          if (!event.active) simulation.alphaTarget(0.3).restart();
-          event.subject.fx = event.subject.x;
-          event.subject.fy = event.subject.y;
-        })
-        .on("drag", function dragged(event) {
-          event.subject.fx = event.x;
-          event.subject.fy = event.y;
-        })
-        .on("end", function dragended(event) {
-          if (!event.active) simulation.alphaTarget(0);
-          event.subject.fx = null;
-          event.subject.fy = null;
-        }));
-
-      // Set the position attributes of links and nodes each time the simulation ticks.
-      simulation.on("tick", () => {
-        link
-          .attr("x1", d => d.source.x)
-          .attr("y1", d => d.source.y)
-          .attr("x2", d => d.target.x)
-          .attr("y2", d => d.target.y);
-
-        node
-          .attr("cx", d => d.x)
-          .attr("cy", d => d.y);
-      });
-
-      simulation.on('end', () => {
-        console.log('end')
-        simulation.stop()
-      });
+      return renderHandle()
+    }
+    return () => {
+      if (animationFrameId) {
+        return cancelAnimationFrame(animationFrameId);
+      }
     }
   }, []);
 
+  function calculateTriangleSides(long, angle) {
+    // 将角度转换为弧度
+    let radians = angle * (Math.PI / 180);
+
+    // 返回结果
+    return {
+      opp: long * Math.sin(radians),
+      adj: long * Math.cos(radians)
+    };
+  }
+
+  function getNumTemplate() {
+    const config = {
+      shortSide: 5,
+      longSide: 20,
+      angle: 45,
+      gap: 5,
+      interval: 10,
+    }
+    const {opp, adj} = calculateTriangleSides(config.shortSide, config.angle)
+    const starPoint = {x: 100, y: 100,}
+    const vLong = config.longSide + opp * 2;
+    const mLong = config.longSide + opp * 2 + (opp - adj) * 2;
+    const hLine = [
+      ['M', opp, adj],
+      ['L', opp * 2, 0],
+      ['L', vLong, 0],
+      ['L', vLong + opp, adj],
+      ['L', vLong, adj * 2],
+      ['L', opp * 2, adj * 2],
+    ]
+    const vLine = hLine.map(item => [item[0], item[2], item[1]])
+    const point = [
+      ['M', opp, adj],
+      ['L', opp * 2, 0],
+      ['L', opp * 3, adj],
+      ['L', opp * 2, adj * 2],
+    ]
+    const template = [
+      hLine.map(item => [item[0], item[1] + config.gap * 2, item[2] + config.gap]),
+      vLine.map(item => [item[0], item[1] + config.gap * 3 + mLong, item[2] + config.gap * 2]),
+      hLine.map(item => [item[0], item[1] + config.gap * 2, item[2] + config.gap * 3 + mLong]),
+      vLine.map(item => [item[0], item[1] + config.gap, item[2] + config.gap * 4 + mLong]),
+      hLine.map(item => [item[0], item[1] + config.gap * 2, item[2] + config.gap * 5 + mLong * 2]),
+      vLine.map(item => [item[0], item[1] + config.gap * 3 + mLong, item[2] + config.gap * 4 + mLong]),
+      vLine.map(item => [item[0], item[1] + config.gap, item[2] + config.gap * 2]),
+      point.map(item => [item[0], item[1] + config.gap * 2 + config.longSide / 2, item[2] + config.gap * 2 + mLong / 2]),
+      point.map(item => [item[0], item[1] + config.gap * 2 + config.longSide / 2, item[2] + config.gap * 4 + mLong / 2 * 3]),
+    ]
+    const numbs = {
+      '0': [0, 1, 3, 4, 5, 6],
+      '1': [3, 6],
+      '2': [0, 1, 2, 3, 4],
+      '3': [0, 1, 2, 4, 5],
+      '4': [1, 2, 5, 6],
+      '5': [0, 2, 4, 5, 6],
+      '6': [0, 2, 3, 4, 5, 6],
+      '7': [0, 1, 5],
+      '8': [0, 1, 2, 3, 4, 5, 6],
+      '9': [0, 1, 2, 4, 5, 6],
+      ':': [7, 8],
+    }
+    for (let key in numbs) {
+      numbs[key] = numbs[key].map(item => template[item])
+    }
+    return {
+      numbs,
+      sWidth: (adj * 2 + config.gap * 4) + (config.longSide + opp * 2 + (opp - adj) * 2)
+    }
+  }
+
+
+  function renderHandle() {
+    /*不循环的处理*/
+    const numbs = getNumTemplate()
+    console.log(numbs)
+
+    setData(currentTime.split('').map((tItem, tIndex) => (numbs.numbs[tItem].map(nItem => (
+      nItem.map(pItem => [pItem[0], pItem[1] + tIndex * numbs.sWidth, pItem[2]].join(' '))
+    )))))
+
+    /*循环的处理*/
+    animationFrameId = requestAnimationFrame(animationHandle);
+  }
+
+  function animationHandle() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    setCurrentTime(`${hours}:${minutes}`)
+    animationFrameId = requestAnimationFrame(animationHandle);
+  }
+
+
   return (
     <svg
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+      className="border border-solid border-orange-200 max-w-full h-auto"
       ref={svgRef}
-      width={width}
-      height={height}
-      viewBox={[-width / 2, -height / 2, width, height]}
-      style={{maxWidth: '100%', height: 'auto'}}
-    />
+      width={windowSize.width}
+      height={windowSize.height}
+      viewBox={[-0, -0, windowSize.width, windowSize.height]}
+    >
+      {
+        data.map((numItem, numIndex) => (
+          <g fill="transparent" key={'num' + numIndex} stroke="black">
+            {
+              numItem.map((pItem, pIndex) => (
+                <path d={`${pItem} Z`} key={'num' + numIndex + '-' + pIndex}/>
+              ))
+            }
+          </g>
+        ))
+      }
+    </svg>
   );
 }
