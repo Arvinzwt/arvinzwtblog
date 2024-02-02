@@ -6,12 +6,11 @@ export default function Clock() {
   const initialized = useRef(false);
   let animationFrameId;
   const windowSize = {
-    width: 300,
+    width: 500,
     height: 600,
   }
 
   const [data, setData] = useState([]);
-  const [currentTime, setCurrentTime] = useState('88:88');
 
   useEffect(() => {
     if (!initialized.current) {
@@ -38,7 +37,7 @@ export default function Clock() {
 
   function getNumTemplate() {
     const config = {
-      shortSide: 5,
+      shortSide: 10,
       longSide: 20,
       angle: 45,
       gap: 5,
@@ -64,15 +63,15 @@ export default function Clock() {
       ['L', opp * 2, adj * 2],
     ]
     const template = [
-      hLine.map(item => [item[0], item[1] + config.gap * 2, item[2] + config.gap]),
-      vLine.map(item => [item[0], item[1] + config.gap * 3 + mLong, item[2] + config.gap * 2]),
-      hLine.map(item => [item[0], item[1] + config.gap * 2, item[2] + config.gap * 3 + mLong]),
-      vLine.map(item => [item[0], item[1] + config.gap, item[2] + config.gap * 4 + mLong]),
-      hLine.map(item => [item[0], item[1] + config.gap * 2, item[2] + config.gap * 5 + mLong * 2]),
-      vLine.map(item => [item[0], item[1] + config.gap * 3 + mLong, item[2] + config.gap * 4 + mLong]),
-      vLine.map(item => [item[0], item[1] + config.gap, item[2] + config.gap * 2]),
-      point.map(item => [item[0], item[1] + config.gap * 2 + config.longSide / 2, item[2] + config.gap * 2 + mLong / 2]),
-      point.map(item => [item[0], item[1] + config.gap * 2 + config.longSide / 2, item[2] + config.gap * 4 + mLong / 2 * 3]),
+      hLine.map(item => [item[0], item[1] + config.interval / 2 + config.gap, item[2] + config.interval]),
+      vLine.map(item => [item[0], item[1] + config.interval / 2 + config.gap * 2 + mLong, item[2] + config.interval + config.gap]),
+      hLine.map(item => [item[0], item[1] + config.interval / 2 + config.gap, item[2] + config.interval + config.gap * 2 + mLong]),
+      vLine.map(item => [item[0], item[1] + config.interval / 2, item[2] + config.interval + config.gap * 3 + mLong]),
+      hLine.map(item => [item[0], item[1] + config.interval / 2 + config.gap, item[2] + config.interval + config.gap * 4 + mLong * 2]),
+      vLine.map(item => [item[0], item[1] + config.interval / 2 + config.gap * 2 + mLong, item[2] + config.interval + config.gap * 3 + mLong]),
+      vLine.map(item => [item[0], item[1] + config.interval / 2, item[2] + config.interval + config.gap]),
+      point.map(item => [item[0], item[1] + config.interval / 2 + config.gap + config.longSide / 2, item[2] + config.interval + config.gap + mLong / 2]),
+      point.map(item => [item[0], item[1] + config.interval / 2 + config.gap + config.longSide / 2, item[2] + config.interval + config.gap * 3 + mLong / 2 * 3]),
     ]
     const numbs = {
       '0': [0, 1, 3, 4, 5, 6],
@@ -87,24 +86,19 @@ export default function Clock() {
       '9': [0, 1, 2, 4, 5, 6],
       ':': [7, 8],
     }
+    const sWidth = (adj * 2 + config.gap * 2 + config.interval) + (config.longSide + opp * 2 + (opp - adj) * 2);
     for (let key in numbs) {
       numbs[key] = numbs[key].map(item => template[item])
     }
     return {
       numbs,
-      sWidth: (adj * 2 + config.gap * 4) + (config.longSide + opp * 2 + (opp - adj) * 2)
+      sWidth
     }
   }
 
 
   function renderHandle() {
     /*不循环的处理*/
-    const numbs = getNumTemplate()
-    console.log(numbs)
-
-    setData(currentTime.split('').map((tItem, tIndex) => (numbs.numbs[tItem].map(nItem => (
-      nItem.map(pItem => [pItem[0], pItem[1] + tIndex * numbs.sWidth, pItem[2]].join(' '))
-    )))))
 
     /*循环的处理*/
     animationFrameId = requestAnimationFrame(animationHandle);
@@ -114,7 +108,12 @@ export default function Clock() {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
-    setCurrentTime(`${hours}:${minutes}`)
+    let currentTime = `${hours}:${minutes}`
+    const numbs = getNumTemplate()
+    setData(currentTime.split('').map((tItem, tIndex) => (numbs.numbs[tItem].map(nItem => (
+      nItem.map(pItem => [pItem[0], pItem[1] + tIndex * numbs.sWidth, pItem[2]].join(' '))
+    )))))
+
     animationFrameId = requestAnimationFrame(animationHandle);
   }
 
