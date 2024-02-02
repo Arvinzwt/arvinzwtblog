@@ -24,22 +24,21 @@ export default function Clock() {
     }
   }, []);
 
-  function calculateTriangleSides(long, angle) {
-    // 将角度转换为弧度
-    let radians = angle * (Math.PI / 180);
+  function getNumTemplate(currentTime = '') {
+    const calculateTriangleSides = function (long, angle) {
+      // 将角度转换为弧度
+      let radians = angle * (Math.PI / 180);
 
-    // 返回结果
-    return {
-      opp: long * Math.sin(radians),
-      adj: long * Math.cos(radians)
-    };
-  }
-
-  function getNumTemplate() {
+      // 返回结果
+      return {
+        opp: long * Math.sin(radians),
+        adj: long * Math.cos(radians)
+      };
+    }
     const config = {
-      shortSide: 10,
-      longSide: 20,
-      angle: 45,
+      shortSide: 5,
+      longSide: 18,
+      angle: 70,
       gap: 5,
       interval: 10,
     }
@@ -87,15 +86,19 @@ export default function Clock() {
       ':': [7, 8],
     }
     const sWidth = (adj * 2 + config.gap * 2 + config.interval) + (config.longSide + opp * 2 + (opp - adj) * 2);
-    for (let key in numbs) {
-      numbs[key] = numbs[key].map(item => template[item])
-    }
+    const sHeight = (adj * 2 + config.gap * 2 + config.interval * 3) + (config.longSide + opp * 2 + (opp - adj) * 2) * 2;
+    const currentTimeArr = currentTime ? (currentTime + '').split('') : []
+
     return {
-      numbs,
-      sWidth
+      numbs: currentTimeArr.map((tItem, tIndex) => {
+        return numbs[tItem].map(item => template[item]).map(nItem => {
+          return nItem.map(pItem => [pItem[0], pItem[1] + tIndex * sWidth, pItem[2]].join(' '))
+        })
+      }),
+      sWidth,
+      sHeight,
     }
   }
-
 
   function renderHandle() {
     /*不循环的处理*/
@@ -108,15 +111,15 @@ export default function Clock() {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
-    let currentTime = `${hours}:${minutes}`
-    const numbs = getNumTemplate()
-    setData(currentTime.split('').map((tItem, tIndex) => (numbs.numbs[tItem].map(nItem => (
-      nItem.map(pItem => [pItem[0], pItem[1] + tIndex * numbs.sWidth, pItem[2]].join(' '))
-    )))))
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    let currentTime = `${hours}:${minutes}:${seconds}`
+
+    const numbsObj = getNumTemplate(currentTime)
+
+    setData(numbsObj.numbs)
 
     animationFrameId = requestAnimationFrame(animationHandle);
   }
-
 
   return (
     <svg
