@@ -60,7 +60,7 @@ export default function Clock() {
       ['L', opp * 3, adj],
       ['L', opp * 2, adj * 2],
     ]
-    const template = [
+    const numTemplate = [
       hLine.map(item => [item[0], item[1] + config.interval / 2 + config.gap, item[2] + config.interval]),
       vLine.map(item => [item[0], item[1] + config.interval / 2 + config.gap * 2 + mLong, item[2] + config.interval + config.gap]),
       hLine.map(item => [item[0], item[1] + config.interval / 2 + config.gap, item[2] + config.interval + config.gap * 2 + mLong]),
@@ -87,29 +87,49 @@ export default function Clock() {
     const sWidth = (adj * 2 + config.gap * 2 + config.interval) + (config.longSide + opp * 2 + (opp - adj) * 2);
     const sHeight = (adj * 2 + config.gap * 2 + config.interval * 3) + (config.longSide + opp * 2 + (opp - adj) * 2) * 2;
     const currentTimeArr = currentTime ? (currentTime + '').split('') : []
-    return currentTimeArr.map((tItem, tIndex) => {
-      let xOffset = (windowSize.width - currentTimeArr.length * sWidth) / 2;
-      let yOffset = (windowSize.height - sHeight) / 2;
-      return numbs[tItem].map(item => template[item]).map(nItem => {
-        return nItem.map(pItem => [
-          pItem[0],
-          pItem[1] + tIndex * sWidth + xOffset,
-          pItem[2] + yOffset
-        ].join(' '))
-      })
-    })
+
+    return {
+      numbs: currentTimeArr.map((tItem, tIndex) => {
+        let xOffset = (windowSize.width - currentTimeArr.length * sWidth) / 2;
+        let yOffset = (windowSize.height - sHeight) / 2;
+        return numbs[tItem].map(item => numTemplate[item]).map(nItem => {
+          return {
+            point: nItem.map(pItem => [
+              pItem[0],
+              pItem[1] + tIndex * sWidth + xOffset,
+              pItem[2] + yOffset
+            ]),
+            fill: true
+          }
+        })
+      }),
+      numTemplate: currentTimeArr.map((tItem, tIndex) => {
+        let xOffset = (windowSize.width - currentTimeArr.length * sWidth) / 2;
+        let yOffset = (windowSize.height - sHeight) / 2;
+        return numTemplate.map((nItem,nIndex) => {
+          return {
+            point: nItem.map(pItem => [
+              pItem[0],
+              pItem[1] + tIndex * sWidth + xOffset,
+              pItem[2] + yOffset
+            ]),
+            fill: numbs[tItem].includes(nIndex),
+          }
+        })
+      }),
+      sWidth,
+      sHeight,
+    }
   }
 
   function renderHandle() {
     /*不循环的处理*/
-
 
     /*循环的处理*/
     animationFrameId = requestAnimationFrame(animationHandle);
   }
 
   function animationHandle() {
-
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
@@ -117,8 +137,9 @@ export default function Clock() {
     let currentTime = `${hours}:${minutes}:${seconds}`
 
     const numbsObj = getNumTemplate(currentTime)
+    setData(numbsObj.numTemplate)
 
-    setData(numbsObj)
+
     animationFrameId = requestAnimationFrame(animationHandle);
   }
 
@@ -134,11 +155,20 @@ export default function Clock() {
     >
       {
         data.map((numItem, numIndex) => (
-          <g fill="transparent" key={'num' + numIndex} stroke="black">
+          <g fill="transparent" key={'num' + numIndex} stroke="#f7f8fb">
             {
-              numItem.map((pItem, pIndex) => (
-                <path d={`${pItem} Z`} key={'num' + numIndex + '-' + pIndex}/>
-              ))
+              numItem.map((lItem, lIndex) => {
+                // if (lItem.fill) {
+                //   return (
+                //     <path d={`${lItem.point.map(pItem => pItem.join(' ')).join(' ')} Z`}
+                //           key={'num' + numIndex + '-' + lIndex}
+                //           fill={lItem.fill ? 'black' : 'null'}/>
+                //   )
+                // }
+                return (<path d={`${lItem.point.map(pItem => pItem.join(' ')).join(' ')} Z`}
+                              key={'num' + numIndex + '-' + lIndex}
+                              fill={lItem.fill ? 'black' : 'null'}/>)
+              })
             }
           </g>
         ))
