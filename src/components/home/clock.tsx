@@ -7,7 +7,7 @@ export default function Clock() {
   let animationFrameId;
   const windowSize = {
     width: 500,
-    height: 600,
+    height: 150,
   }
 
   const [data, setData] = useState([]);
@@ -36,14 +36,13 @@ export default function Clock() {
       };
     }
     const config = {
-      shortSide: 5,
-      longSide: 18,
-      angle: 70,
-      gap: 5,
-      interval: 10,
+      shortSide: 8,
+      longSide: 10,
+      angle: 45,
+      gap: 3,
+      interval: 5,
     }
     const {opp, adj} = calculateTriangleSides(config.shortSide, config.angle)
-    const starPoint = {x: 100, y: 100,}
     const vLong = config.longSide + opp * 2;
     const mLong = config.longSide + opp * 2 + (opp - adj) * 2;
     const hLine = [
@@ -88,26 +87,29 @@ export default function Clock() {
     const sWidth = (adj * 2 + config.gap * 2 + config.interval) + (config.longSide + opp * 2 + (opp - adj) * 2);
     const sHeight = (adj * 2 + config.gap * 2 + config.interval * 3) + (config.longSide + opp * 2 + (opp - adj) * 2) * 2;
     const currentTimeArr = currentTime ? (currentTime + '').split('') : []
-
-    return {
-      numbs: currentTimeArr.map((tItem, tIndex) => {
-        return numbs[tItem].map(item => template[item]).map(nItem => {
-          return nItem.map(pItem => [pItem[0], pItem[1] + tIndex * sWidth, pItem[2]].join(' '))
-        })
-      }),
-      sWidth,
-      sHeight,
-    }
+    return currentTimeArr.map((tItem, tIndex) => {
+      let xOffset = (windowSize.width - currentTimeArr.length * sWidth) / 2;
+      let yOffset = (windowSize.height - sHeight) / 2;
+      return numbs[tItem].map(item => template[item]).map(nItem => {
+        return nItem.map(pItem => [
+          pItem[0],
+          pItem[1] + tIndex * sWidth + xOffset,
+          pItem[2] + yOffset
+        ].join(' '))
+      })
+    })
   }
 
   function renderHandle() {
     /*不循环的处理*/
+
 
     /*循环的处理*/
     animationFrameId = requestAnimationFrame(animationHandle);
   }
 
   function animationHandle() {
+
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
@@ -116,8 +118,7 @@ export default function Clock() {
 
     const numbsObj = getNumTemplate(currentTime)
 
-    setData(numbsObj.numbs)
-
+    setData(numbsObj)
     animationFrameId = requestAnimationFrame(animationHandle);
   }
 
