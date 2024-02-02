@@ -9,7 +9,13 @@ export default function Clock() {
     width: 500,
     height: 150,
   }
-
+  const config = {
+    shortSide: 10,
+    longSide: 20,
+    angle: 30,
+    gap: 3,
+    interval: 5,
+  }
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -24,24 +30,18 @@ export default function Clock() {
     }
   }, []);
 
-  function getNumTemplate(currentTime = '') {
-    const calculateTriangleSides = function (long, angle) {
-      // 将角度转换为弧度
-      let radians = angle * (Math.PI / 180);
+  function calculateTriangleSides(long, angle) {
+    // 将角度转换为弧度
+    let radians = angle * (Math.PI / 180);
 
-      // 返回结果
-      return {
-        opp: long * Math.sin(radians),
-        adj: long * Math.cos(radians)
-      };
-    }
-    const config = {
-      shortSide: 8,
-      longSide: 10,
-      angle: 45,
-      gap: 3,
-      interval: 5,
-    }
+    // 返回结果
+    return {
+      opp: long * Math.sin(radians),
+      adj: long * Math.cos(radians)
+    };
+  }
+
+  function getNumTemplate(currentTime = '') {
     const {opp, adj} = calculateTriangleSides(config.shortSide, config.angle)
     const vLong = config.longSide + opp * 2;
     const mLong = config.longSide + opp * 2 + (opp - adj) * 2;
@@ -106,7 +106,7 @@ export default function Clock() {
       numTemplate: currentTimeArr.map((tItem, tIndex) => {
         let xOffset = (windowSize.width - currentTimeArr.length * sWidth) / 2;
         let yOffset = (windowSize.height - sHeight) / 2;
-        return numTemplate.map((nItem,nIndex) => {
+        return numTemplate.map((nItem, nIndex) => {
           return {
             point: nItem.map(pItem => [
               pItem[0],
@@ -119,6 +119,36 @@ export default function Clock() {
       }),
       sWidth,
       sHeight,
+    }
+  }
+
+  function getDefaultTemplate(currentTime = '') {
+    const currentTimeArr = currentTime ? (currentTime + '').split('') : []
+    const {opp, adj} = calculateTriangleSides(config.shortSide, config.angle)
+    const point = [
+      ['M', 0, adj],
+      ['L', opp, 0],
+      ['L', opp, 0],
+      ['L', opp * 2, adj],
+      ['L', opp, adj * 2],
+      ['L', opp, adj * 2],
+    ];
+    const len = currentTimeArr.length * 7;
+    const sw = opp * 2, sh = adj * 2;
+
+    return {
+      numTemplate: currentTimeArr.map((tItem, tIndex) => {
+        return new Array(9).fill(null).map(((lItem, lIndex) => {
+          return {
+            point: point.map(pItem => [
+              pItem[0],
+              pItem[1] + (tIndex * currentTimeArr.length + lIndex) * (windowSize.width / len) - sw / 2,
+              pItem[2] + windowSize.height - sh - config.interval,
+            ]),
+            fill: false
+          }
+        }))
+      }),
     }
   }
 
@@ -137,6 +167,16 @@ export default function Clock() {
     let currentTime = `${hours}:${minutes}:${seconds}`
 
     const numbsObj = getNumTemplate(currentTime)
+    const defaultObj = getDefaultTemplate(currentTime)
+
+    numbsObj.numTemplate.map((item1, index1) => {
+      item1.map((item2, index2) => {
+        if (!item2.fill) {
+          numbsObj.numTemplate[index1][index2].point = defaultObj.numTemplate[index1][index2].point
+        }
+      })
+    })
+
     setData(numbsObj.numTemplate)
 
 
@@ -167,7 +207,7 @@ export default function Clock() {
                 // }
                 return (<path d={`${lItem.point.map(pItem => pItem.join(' ')).join(' ')} Z`}
                               key={'num' + numIndex + '-' + lIndex}
-                              fill={lItem.fill ? 'black' : 'null'}/>)
+                              fill={lItem.fill ? '#999999' : 'null'}/>)
               })
             }
           </g>
