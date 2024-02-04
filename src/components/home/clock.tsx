@@ -1,5 +1,6 @@
 'use client';
 import React, {useEffect, useRef, useState} from 'react';
+import animation from '../animation'
 
 export default function Clock() {
   const svgRef = useRef(null);
@@ -16,7 +17,7 @@ export default function Clock() {
     gap: 3,
     interval: 5,
   }
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(getNumTemplate('88:88:88').numTemplate);
 
   useEffect(() => {
     if (!initialized.current) {
@@ -25,7 +26,7 @@ export default function Clock() {
     }
     return () => {
       if (animationFrameId) {
-        return cancelAnimationFrame(animationFrameId);
+        return clearTimeout(animationFrameId);
       }
     }
   }, []);
@@ -152,14 +153,7 @@ export default function Clock() {
     }
   }
 
-  function renderHandle() {
-    /*不循环的处理*/
-
-    /*循环的处理*/
-    animationFrameId = requestAnimationFrame(animationHandle);
-  }
-
-  function animationHandle() {
+  function getCurrentNumber() {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
@@ -177,10 +171,59 @@ export default function Clock() {
       })
     })
 
-    setData(numbsObj.numTemplate)
+    return numbsObj.numTemplate
+  }
 
+  function renderHandle() {
+    /*不循环的处理*/
 
-    animationFrameId = requestAnimationFrame(animationHandle);
+    /*循环的处理*/
+    animationHandle();
+  }
+
+  function animation(from, to, duration, callback) {
+    let start = 0;
+    let during = Math.ceil(duration / 17);
+    let req = null;
+
+    const easeOut = function (t, b, c, d) {
+      if ((t /= d) < (1 / 2.75)) {
+        return c * (7.5625 * t * t) + b;
+      } else if (t < (2 / 2.75)) {
+        return c * (7.5625 * (t -= (1.5 / 2.75)) * t + .75) + b;
+      } else if (t < (2.5 / 2.75)) {
+        return c * (7.5625 * (t -= (2.25 / 2.75)) * t + .9375) + b;
+      } else {
+        return c * (7.5625 * (t -= (2.625 / 2.75)) * t + .984375) + b;
+      }
+    }
+    const step = function () {
+      // value就是当前的位置值
+      // 例如我们可以设置DOM.style.left = value + 'px'实现定位
+      // 当前的运动位置
+      let value = easeOut(start, from, to - from, during);
+
+      // 时间递增
+      start++;
+      // 如果还没有运动到位，继续
+      if (start <= during) {
+        callback(value);
+        req = requestAnimationFrame(step);
+      } else {
+        // 动画结束，这里可以插入回调...
+        callback(to, true);
+      }
+    };
+
+    step();
+  }
+
+  function animationHandle() {
+    const numTemplate = getCurrentNumber()
+
+    setData(numTemplate)
+
+    animationFrameId = setTimeout(animationHandle, 1000);
   }
 
   return (
