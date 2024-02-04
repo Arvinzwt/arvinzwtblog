@@ -6,13 +6,13 @@ export default function Clock() {
   const initialized = useRef(false);
   let animationFrameId;
   const windowSize = {
-    width: 500,
+    width: 720,
     height: 150,
   }
   const config = {
     shortSide: 10,
     longSide: 20,
-    angle: 30,
+    angle: 45,
     gap: 3,
     interval: 5,
   }
@@ -162,30 +162,20 @@ export default function Clock() {
 
   function renderHandle() {
     /*不循环的处理*/
-    const newData = getCurrentNumber()
-    const {numbs2: oldData} = getNumTemplate('88:88:88')
-
-    // console.log(oldData,111)
-    // for (let i = 0; i < oldData.length; i++) {
-    //   for (let j = 0; j < oldData[i].length; j++) {
-    //     for (let k = 0; k < oldData[i][j].point.length; k++) {
-    //       let [key1, x1, y1] = oldData[i][j].point[k]
-    //       let [key2, x2, y2] = newData[i][j].point[k]
-    //       let xstep = (x2 - x1) / 500;
-    //       let ystep = (y2 - y1) / 500;
-    //       let stepCount = 0;
-    //     }
-    //   }
-    // }
-
 
     /*循环的处理*/
     animationFrameId = requestAnimationFrame(animationHandle);
   }
 
   function animationHandle() {
-    const newData = getCurrentNumber()
-    setCurrentData(newData)
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    let currentTime = `${hours}:${minutes}:${seconds}`
+
+
+    setCurrentData(getNumTemplate(currentTime).numbs2)
 
     animationFrameId = requestAnimationFrame(animationHandle);
   }

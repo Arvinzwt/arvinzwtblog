@@ -3,17 +3,10 @@ import Clock from "@/components/home/clock";
 
 export default function Home() {
   return (
-    <main className="border border-solid border-current p-5	min-h-screen">
-      {/*<Link*/}
-      {/*  className="mb-2 flex h-20 items-end justify-start rounded-md bg-blue-600 p-4 md:h-40"*/}
-      {/*  href="/dashboard"*/}
-      {/*>*/}
-      {/*  <div className="w-32 text-white md:w-40">*/}
-      {/*    home*/}
-      {/*    （点击进入dashboard）*/}
-      {/*  </div>*/}
-      {/*</Link>*/}
-      <Clock/>
+    <main className="mx-auto md:w-[720px] p-4 min-h-screen border border-solid border-current">
+      <div className="flex items-end justify-center md:h-40 mb-2">
+        <Link className="" href="/dashboard"><Clock/></Link>
+      </div>
     </main>
   );
 }
