@@ -1,6 +1,5 @@
 'use client';
 import React, {useEffect, useRef, useState} from 'react';
-import animation from '../animation'
 
 export default function Clock() {
   const svgRef = useRef(null);
@@ -17,7 +16,8 @@ export default function Clock() {
     gap: 3,
     interval: 5,
   }
-  const [data, setData] = useState(getNumTemplate('88:88:88').numTemplate);
+
+  const [currentData, setCurrentData] = useState([]);
 
   useEffect(() => {
     if (!initialized.current) {
@@ -26,7 +26,7 @@ export default function Clock() {
     }
     return () => {
       if (animationFrameId) {
-        return clearTimeout(animationFrameId);
+        return cancelAnimationFrame(animationFrameId);
       }
     }
   }, []);
@@ -58,7 +58,9 @@ export default function Clock() {
     const point = [
       ['M', opp, adj],
       ['L', opp * 2, 0],
+      ['L', opp * 2, 0],
       ['L', opp * 3, adj],
+      ['L', opp * 2, adj * 2],
       ['L', opp * 2, adj * 2],
     ]
     const numTemplate = [
@@ -90,7 +92,22 @@ export default function Clock() {
     const currentTimeArr = currentTime ? (currentTime + '').split('') : []
 
     return {
-      numbs: currentTimeArr.map((tItem, tIndex) => {
+      points: currentTimeArr.map((tItem, tIndex) => {
+        return new Array(9).fill(null).map(((lItem, lIndex) => {
+          let pIn = tIndex * numTemplate.length + lIndex
+          let len = currentTimeArr.length * numTemplate.length;
+          let pw = opp * 2, ph = adj * 2;
+          return {
+            point: point.map(pItem => [
+              pItem[0],
+              pItem[1] + pIn * ((windowSize.width / len)) - opp + (windowSize.width / len - pw) / 2,
+              pItem[2] + windowSize.height - ph - config.interval,
+            ]),
+            fill: false
+          }
+        }))
+      }),
+      numbs1: currentTimeArr.map((tItem, tIndex) => {
         let xOffset = (windowSize.width - currentTimeArr.length * sWidth) / 2;
         let yOffset = (windowSize.height - sHeight) / 2;
         return numbs[tItem].map(item => numTemplate[item]).map(nItem => {
@@ -104,7 +121,7 @@ export default function Clock() {
           }
         })
       }),
-      numTemplate: currentTimeArr.map((tItem, tIndex) => {
+      numbs2: currentTimeArr.map((tItem, tIndex) => {
         let xOffset = (windowSize.width - currentTimeArr.length * sWidth) / 2;
         let yOffset = (windowSize.height - sHeight) / 2;
         return numTemplate.map((nItem, nIndex) => {
@@ -123,36 +140,6 @@ export default function Clock() {
     }
   }
 
-  function getDefaultTemplate(currentTime = '') {
-    const currentTimeArr = currentTime ? (currentTime + '').split('') : []
-    const {opp, adj} = calculateTriangleSides(config.shortSide, config.angle)
-    const point = [
-      ['M', 0, adj],
-      ['L', opp, 0],
-      ['L', opp, 0],
-      ['L', opp * 2, adj],
-      ['L', opp, adj * 2],
-      ['L', opp, adj * 2],
-    ];
-    const len = currentTimeArr.length * 7;
-    const sw = opp * 2, sh = adj * 2;
-
-    return {
-      numTemplate: currentTimeArr.map((tItem, tIndex) => {
-        return new Array(9).fill(null).map(((lItem, lIndex) => {
-          return {
-            point: point.map(pItem => [
-              pItem[0],
-              pItem[1] + (tIndex * currentTimeArr.length + lIndex) * (windowSize.width / len) - sw / 2,
-              pItem[2] + windowSize.height - sh - config.interval,
-            ]),
-            fill: false
-          }
-        }))
-      }),
-    }
-  }
-
   function getCurrentNumber() {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
@@ -161,69 +148,46 @@ export default function Clock() {
     let currentTime = `${hours}:${minutes}:${seconds}`
 
     const numbsObj = getNumTemplate(currentTime)
-    const defaultObj = getDefaultTemplate(currentTime)
 
-    numbsObj.numTemplate.map((item1, index1) => {
+    numbsObj.numbs2.map((item1, index1) => {
       item1.map((item2, index2) => {
         if (!item2.fill) {
-          numbsObj.numTemplate[index1][index2].point = defaultObj.numTemplate[index1][index2].point
+          numbsObj.numbs2[index1][index2].point = numbsObj.points[index1][index2].point
         }
       })
     })
 
-    return numbsObj.numTemplate
+    return numbsObj.numbs2
   }
 
   function renderHandle() {
     /*不循环的处理*/
+    const newData = getCurrentNumber()
+    const {numbs2: oldData} = getNumTemplate('88:88:88')
+
+    // console.log(oldData,111)
+    // for (let i = 0; i < oldData.length; i++) {
+    //   for (let j = 0; j < oldData[i].length; j++) {
+    //     for (let k = 0; k < oldData[i][j].point.length; k++) {
+    //       let [key1, x1, y1] = oldData[i][j].point[k]
+    //       let [key2, x2, y2] = newData[i][j].point[k]
+    //       let xstep = (x2 - x1) / 500;
+    //       let ystep = (y2 - y1) / 500;
+    //       let stepCount = 0;
+    //     }
+    //   }
+    // }
+
 
     /*循环的处理*/
-    animationHandle();
-  }
-
-  function animation(from, to, duration, callback) {
-    let start = 0;
-    let during = Math.ceil(duration / 17);
-    let req = null;
-
-    const easeOut = function (t, b, c, d) {
-      if ((t /= d) < (1 / 2.75)) {
-        return c * (7.5625 * t * t) + b;
-      } else if (t < (2 / 2.75)) {
-        return c * (7.5625 * (t -= (1.5 / 2.75)) * t + .75) + b;
-      } else if (t < (2.5 / 2.75)) {
-        return c * (7.5625 * (t -= (2.25 / 2.75)) * t + .9375) + b;
-      } else {
-        return c * (7.5625 * (t -= (2.625 / 2.75)) * t + .984375) + b;
-      }
-    }
-    const step = function () {
-      // value就是当前的位置值
-      // 例如我们可以设置DOM.style.left = value + 'px'实现定位
-      // 当前的运动位置
-      let value = easeOut(start, from, to - from, during);
-
-      // 时间递增
-      start++;
-      // 如果还没有运动到位，继续
-      if (start <= during) {
-        callback(value);
-        req = requestAnimationFrame(step);
-      } else {
-        // 动画结束，这里可以插入回调...
-        callback(to, true);
-      }
-    };
-
-    step();
+    animationFrameId = requestAnimationFrame(animationHandle);
   }
 
   function animationHandle() {
-    const numTemplate = getCurrentNumber()
+    const newData = getCurrentNumber()
+    setCurrentData(newData)
 
-    setData(numTemplate)
-
-    animationFrameId = setTimeout(animationHandle, 1000);
+    animationFrameId = requestAnimationFrame(animationHandle);
   }
 
   return (
@@ -237,7 +201,7 @@ export default function Clock() {
       viewBox={[-0, -0, windowSize.width, windowSize.height]}
     >
       {
-        data.map((numItem, numIndex) => (
+        currentData.map((numItem, numIndex) => (
           <g fill="transparent" key={'num' + numIndex} stroke="#f7f8fb">
             {
               numItem.map((lItem, lIndex) => {
