@@ -1,25 +1,21 @@
 import Link from "next/link";
-import {TAGS,BLOG} from '@/route/index'
+// import {TAGS,BLOG} from '@/route/index'
+import {TagWrapper} from '@/ui/tags'
+import {fetchBlogListData} from '@/lib/data';
 
-export default function Blog() {
+export default async function Blog() {
+  const {blogList} = await fetchBlogListData()
+
   return (
     <main className="">
       <nav className="flex flex-wrap gap-3">
-        {
-          TAGS.map((item,index)=>(
-            <span
-              key={index}
-              className="cursor-pointer inline-flex items-center rounded-md font-semibold transition-colors border px-2.5 py-0.5 text-xs bg-slate-50">
-            # {item}
-            </span>
-          ))
-        }
+        <TagWrapper/>
       </nav>
       <ul className="py-2">{
-        BLOG.map((item, index) => (
-          <li key={index} className="py-2 flex items-center gap-3 font-medium">
+        blogList.map((item) => (
+          <li key={item.id} className="py-2 flex items-center gap-3 font-medium">
             <span className="text-sm">{item.date}</span>
-            <Link href={item.path}>{item.name}</Link>
+            <Link href={item.path}>{item.title}</Link>
           </li>
         ))
       }

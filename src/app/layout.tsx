@@ -2,14 +2,16 @@ import type {Metadata} from "next";
 import "@/assets/css/globals.css";
 import {inter} from "@/assets/font/fonts";
 import Link from 'next/link'
-import {TITLE,DESCRIPTION, NAV} from '@/route/index'
+import {TITLE, DESCRIPTION, fetchNavListData} from '@/lib/data'
 
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
 };
 
-export default function RootLayout({children,}: Readonly<{ children: React.ReactNode; }>) {
+export default async function RootLayout({children,}: Readonly<{ children: React.ReactNode; }>) {
+  const navList = await fetchNavListData()
+
   return (
     <html lang="en">
     <body className={inter.className}>
@@ -20,7 +22,7 @@ export default function RootLayout({children,}: Readonly<{ children: React.React
     <nav className="mb-4">
       <ul className="flex py-3 gap-4 font-medium">
         {
-          NAV.map(item => (
+          navList.map(item => (
             <li key={item.id}>
               <Link href={item.path}>{item.name}</Link>
             </li>
