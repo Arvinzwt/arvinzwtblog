@@ -1,0 +1,42 @@
+import type {Metadata} from "next";
+import "@/assets/css/globals.css";
+import {inter} from "@/assets/font/fonts";
+import Link from 'next/link'
+import {TITLE, DESCRIPTION, fetchNavListData} from '@/lib/data'
+
+export const metadata: Metadata = {
+  title: TITLE,
+  description: DESCRIPTION,
+};
+
+export default async function RootLayout({children,}: Readonly<{ children: React.ReactNode; }>) {
+  const navList = await fetchNavListData()
+
+  return (
+    <html lang="en">
+    <body className={inter.className}>
+    <header className="flex items-end	gap-3">
+      <h3 className="leading-7">{TITLE}</h3>
+      <span className="leading-7">{DESCRIPTION}</span>
+    </header>
+    <nav className="mb-4">
+      <ul className="flex py-3 gap-4 font-medium">
+        {
+          navList.map(item => (
+            <li key={item.id}>
+              <Link href={item.path}>{item.name}</Link>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    {children}
+    <footer className="p-7 flex font-semibold items-center justify-center gap-2">
+      <span>Powered</span>
+      <span>by</span>
+      <span><Link href='/blog/about'>Arvin</Link></span>
+    </footer>
+    </body>
+    </html>
+  );
+}

@@ -1,4 +1,3 @@
-
 import {fetchBlogDetailData} from '@/lib/data';
 import {Tag} from '@/ui/tags'
 
@@ -13,7 +12,7 @@ export default async function First() {
         <b className="text-sm">{blog.date}</b>
         <Tag tag={blog.tag}/>
       </nav>
-      <section dangerouslySetInnerHTML={{ __html: blog.content }}>
+      <section dangerouslySetInnerHTML={{__html: blog.content}}>
       </section>
     </main>
   );

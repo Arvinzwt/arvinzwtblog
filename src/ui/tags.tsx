@@ -21,7 +21,7 @@ export async function TagWrapper() {
     <>
       {
         tagList.map((item) => (
-          <Tag tag={item}/>
+          <Tag key={item.id} tag={item}/>
         ))
       }
     </>

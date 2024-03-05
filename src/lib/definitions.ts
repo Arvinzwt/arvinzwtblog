@@ -3,12 +3,13 @@ export type Tag = {
   color: string;
   label: string;
 }
+
 export type Blog = {
   id: string,
   date: string,
   title: string,
   path: string,
-  tagList: array,
+  tagList: Tag[],
   description: string,
   content: string,
 }

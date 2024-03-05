@@ -1,7 +1,7 @@
 export default function Setting() {
   return (
     <main className="">
-      setting
+      this is setting page
     </main>
   );
 }

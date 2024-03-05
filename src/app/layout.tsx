@@ -1,42 +1,21 @@
-import type {Metadata} from "next";
 import "@/assets/css/globals.css";
 import {inter} from "@/assets/font/fonts";
-import Link from 'next/link'
-import {TITLE, DESCRIPTION, fetchNavListData} from '@/lib/data'
+import {Metadata} from "next";
+import {TITLE, DESCRIPTION} from '@/lib/data'
 
 export const metadata: Metadata = {
-  title: TITLE,
+  title: {
+    template: `%s | ${TITLE}`,
+    default: TITLE,
+  },
   description: DESCRIPTION,
+  metadataBase: new URL('https://next-learn-dashboard.vercel.sh'),
 };
 
 export default async function RootLayout({children,}: Readonly<{ children: React.ReactNode; }>) {
-  const navList = await fetchNavListData()
-
   return (
     <html lang="en">
-    <body className={inter.className}>
-    <header className="flex items-end	gap-3">
-      <h3 className="leading-7">{TITLE}</h3>
-      <span className="leading-7">{DESCRIPTION}</span>
-    </header>
-    <nav className="mb-4">
-      <ul className="flex py-3 gap-4 font-medium">
-        {
-          navList.map(item => (
-            <li key={item.id}>
-              <Link href={item.path}>{item.name}</Link>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
-    {children}
-    <footer className="p-7 flex font-semibold items-center justify-center gap-2">
-      <span>Powered</span>
-      <span>by</span>
-      <span><Link href='/about'>Arvin</Link></span>
-    </footer>
-    </body>
+    <body className={`${inter.className} antialiased`}>{children}</body>
     </html>
   );
 }
