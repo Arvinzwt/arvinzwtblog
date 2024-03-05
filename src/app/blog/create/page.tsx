@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 export default async function Page() {
   return (
     <main>
-      this is create page
+      create Blog
     </main>
   );
 }

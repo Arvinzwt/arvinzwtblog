@@ -3,7 +3,6 @@ import {
 } from '@/lib/definitions';
 import {fetchTagListData} from '@/lib/data';
 
-
 export function Tag({tag}: {
   tag: Tag;
 }) {

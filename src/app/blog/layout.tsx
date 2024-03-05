@@ -1,19 +1,19 @@
-import type {Metadata} from "next";
-import {Header, Footer, Nav} from '@/ui/layoutTemplate'
-
-export const metadata: Metadata = {
-  title: "Blog",
-  description: "Blog",
-};
-
-export default async function RootLayout({children,}: Readonly<{ children: React.ReactNode; }>) {
+// import SideNav from '@/app/components/dashboard/sidenav';
+//
+// export default function Layout({ children }: { children: React.ReactNode }) {
+//   return (
+//     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
+//       <div className="w-full flex-none md:w-64">
+//         <SideNav />
+//       </div>
+//       <div className="grow p-6 md:overflow-y-auto md:p-12">{children}</div>
+//     </div>
+//   );
+// }
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <>
-      <Header/>
-      <Nav/>
-      {children}
-      <Footer/>
-    </>
+    <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
+      <div className="grow p-6 md:overflow-y-auto md:p-12">{children}</div>
+    </div>
   );
 }
-
