@@ -54,8 +54,8 @@ export async function fetchNavListData() {
   return [
     {id: '0f48d86f-5731-42ec-b44b-2d502f8e565a', name: 'Home', path: '/'},
     {id: '1cd2f4bf-4f5c-4e18-a5cc-d9c450e3c345', name: 'Blog', path: '/blog'},
-    {id: '8c919752-a78b-40b9-8014-c9f306177772', name: 'About', path: '/blog/about'},
-    {id: 'ebdfc9ac-6445-42f4-b274-25918b83d510', name: 'Setting', path: '/blog/setting'}
+    {id: '8c919752-a78b-40b9-8014-c9f306177772', name: 'About', path: '/about'},
+    {id: 'ebdfc9ac-6445-42f4-b274-25918b83d510', name: 'Setting', path: '/setting'}
   ]
 }
 
