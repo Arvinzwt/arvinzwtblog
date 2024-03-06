@@ -1,8 +1,8 @@
-import {fetchBlogDetailData} from '@/lib/data';
-import {Tag} from '@/components/Tags'
+import {TagItem} from '@/components/TagItem'
+import {fetchBlogDetail} from "@/api/blog";
 
 export default async function First() {
-  const blog = await fetchBlogDetailData()
+  const blog = await fetchBlogDetail('sdfsdf1231123')
   return (
     <main className="">
       <header>
@@ -10,7 +10,11 @@ export default async function First() {
       </header>
       <nav className="py-2 flex items-center gap-3">
         <b className="text-sm">{blog.date}</b>
-        <Tag tag={blog.tag}/>
+        {
+          blog.tags.map(item=>(
+            <TagItem key={item.id} tag={item}/>
+          ))
+        }
       </nav>
       <section dangerouslySetInnerHTML={{__html: blog.content}}/>
     </main>

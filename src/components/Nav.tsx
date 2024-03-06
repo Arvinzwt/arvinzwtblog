@@ -1,4 +1,4 @@
-import {fetchNavListData} from '@/lib/data'
+import {fetchNavListData} from '../api/nav'
 import Link from "next/link";
 
 export async function Nav() {

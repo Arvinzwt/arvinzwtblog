@@ -32,8 +32,8 @@
 //   );
 // }
 import Link from "next/link";
-import {TagWrapper} from '@/components/tags'
-import {fetchBlogListData} from '@/lib/data';
+import {TagsWrapper} from '@/components/TagsWrapper'
+import {fetchBlogListData} from '@/api/blog';
 import {Pagination} from "@/components/Pagination";
 
 export default async function Blog() {
@@ -42,7 +42,7 @@ export default async function Blog() {
   return (
     <main className="">
       <nav className="flex flex-wrap gap-3">
-        <TagWrapper/>
+        <TagsWrapper/>
       </nav>
       <ul className="py-2">{
         blogList.map((item) => (

@@ -1,6 +1,6 @@
-import {inter} from "@/assets/font/fonts";
-import {TITLE, DESCRIPTION} from '@/lib/data'
 import type {Metadata} from "next";
+import {inter} from "@/assets/font/fonts";
+import {TITLE, DESCRIPTION} from '@/api/common'
 
 export const metadata: Metadata = {
   title: TITLE,

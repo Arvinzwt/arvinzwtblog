@@ -1,7 +1,7 @@
 import type {Metadata} from "next";
 import "@/assets/css/globals.css";
 import {inter} from "@/assets/font/fonts";
-import {TITLE, DESCRIPTION} from '@/lib/data'
+import {TITLE, DESCRIPTION} from '@/api/common'
 import {Header} from '@/components/Header'
 import {Nav} from '@/components/Nav'
 import {Footer} from '@/components/Footer'

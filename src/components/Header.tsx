@@ -1,4 +1,4 @@
-import {TITLE, DESCRIPTION} from '@/lib/data'
+import {TITLE, DESCRIPTION} from '@/api/common'
 
 export async function Header() {
   return (
