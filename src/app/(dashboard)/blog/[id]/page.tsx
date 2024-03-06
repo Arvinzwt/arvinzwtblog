@@ -1,8 +1,16 @@
 import {TagItem} from '@/components/TagItem'
 import {fetchBlogDetail} from "@/api/blog";
 
-export default async function First() {
-  const blog = await fetchBlogDetail('sdfsdf1231123')
+
+export async function generateStaticParams() {
+  return [
+    {id: 'first'}
+  ]
+}
+
+export default async function First({params}:any) {
+  const {id} = params
+  const blog = await fetchBlogDetail(id)
   return (
     <main className="">
       <header>
@@ -11,7 +19,7 @@ export default async function First() {
       <nav className="py-2 flex items-center gap-3">
         <b className="text-sm">{blog.date}</b>
         {
-          blog.tags.map(item=>(
+          blog.tags.map(item => (
             <TagItem key={item.id} tag={item}/>
           ))
         }
