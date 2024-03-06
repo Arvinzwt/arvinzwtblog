@@ -1,8 +1,8 @@
 import {TagItem} from "./TagItem";
-import {fetchTagListData} from '@/lib/data';
+import {fetchTagListData} from '@/api/tag';
 
 export async function TagsWrapper() {
-  const {tagList} = await fetchTagListData();
+  const tagList = await fetchTagListData();
   return (
     <>
       {
