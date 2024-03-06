@@ -1,6 +1,6 @@
-// import CardWrapper from '@/app/components/dashboard/cards';
-// import RevenueChart from '@/app/components/dashboard/revenue-chart';
-// import LatestInvoices from '@/app/components/dashboard/latest-invoices';
+// import CardWrapper from '@/app/components/(dashboard)/cards';
+// import RevenueChart from '@/app/components/(dashboard)/revenue-chart';
+// import LatestInvoices from '@/app/components/(dashboard)/latest-invoices';
 // import { lusitana } from '@/app/components/fonts';
 // import { Suspense } from 'react';
 // import {

@@ -30,8 +30,8 @@ export async function fetchBlogDetailData() {
   return {
     id: '999e0a01-b41a-4787-a344-670c71e0ca99',
     date: '2023/03/05',
-    title: '这是个测试数据',
-    path: '/blog/first',
+    title: 'this is test message',
+    path: '/blog/999e0a01-b41a-4787-a344/',
     tag: {
       value: 'e5cec4e2-9c66-46bc-8165-8b7a898d69b6',
       color: 'red',

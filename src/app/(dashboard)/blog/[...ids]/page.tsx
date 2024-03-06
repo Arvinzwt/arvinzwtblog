@@ -12,17 +12,10 @@ export default async function First() {
         <b className="text-sm">{blog.date}</b>
         <Tag tag={blog.tag}/>
       </nav>
-      <section dangerouslySetInnerHTML={{__html: blog.content}}>
-      </section>
+      <section dangerouslySetInnerHTML={{__html: blog.content}}/>
     </main>
   );
 }
-
-
-
-
-
-
 
 // import Form from '@/app/components/invoices/edit-form';
 // import Breadcrumbs from '@/app/components/invoices/breadcrumbs';
@@ -49,10 +42,10 @@ export default async function First() {
 //     <main>
 //       <Breadcrumbs
 //         breadcrumbs={[
-//           { label: 'Invoices', href: '/dashboard/invoices' },
+//           { label: 'Invoices', href: '/(dashboard)/invoices' },
 //           {
 //             label: 'Edit Invoice',
-//             href: `/dashboard/invoices/${id}/edit`,
+//             href: `/(dashboard)/invoices/${id}/edit`,
 //             active: true,
 //           },
 //         ]}
