@@ -1,0 +1,98 @@
+@use "tailwindcss";
+
+:root {
+  --wm-bg-color: #f2f3f5;
+  --wm-t-indigo: #303133;
+  --wm-footer-height: 50px;
+  --wm-header-height: 50px;
+  --wm-zoom: 1;
+}
+
+body,
+html,
+#root {
+  color: var(--wm-t-indigo);
+  line-height: 1.5;
+  font-size: 16px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  outline: none;
+  height: 100%;
+}
+
+body {
+  background-color: var(--wm-bg-color);
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAACFJREFUeNpiZGBg4GegAsBlCD8TqSYNQg2Mo6FEBAAIMACdPABtrSW/IQAAAABJRU5ErkJggg==");
+  background-repeat: repeat;
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.wmm-container {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  background: transparent;
+
+  .wmm-wrap {
+    max-width: 992px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+
+  .wmm-height-wrap {
+    min-height: calc(100vh - 126px);
+    box-sizing: border-box;
+  }
+
+  .wmm-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    height: var(--wm-header-height);
+    background-color: #122a32;
+    color: #ffffff;
+    font-size: 16px;
+    line-height: 24px;
+
+    .wmm-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+      background-image: url("/images/header_bg.png");
+      background-repeat: no-repeat;
+      background-position: calc(100% - 50px) center;
+      background-size: auto 100%;
+    }
+  }
+
+  .wmm-main {
+    //min-height: 200px;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    //min-height: calc(100vh - var(--wm-footer-height)  - var(--wm-footer-height));
+
+    //.wmm-wrap{
+    //  height: 100%;
+    //}
+  }
+
+  .wmm-footer {
+    height: var(--wm-footer-height);
+    line-height: var(--wm-footer-height);
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+  }
+}
