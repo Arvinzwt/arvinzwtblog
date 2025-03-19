@@ -1,8 +1,9 @@
-export function ArchiveRemark({children}) {
+export function ArchiveRemark({children, propClass = ''}) {
   return (
     <>
-      <span className="text-xs text-gray-500 mx-2 cursor-pointer hover:text-blue-500 text-nowrap flex items-center overflow-hidden">
-        #&nbsp;{children}
+      {/*cursor-pointer hover:text-blue-500*/}
+      <span className="text-sm text-gray-500 mx-2 text-nowrap flex items-center overflow-hidden">
+        <span className={`${propClass}`}>#&nbsp;{children}</span>
       </span>
     </>
   );
