@@ -1,23 +1,22 @@
 import Head from "next/head";
 import Image from "next/image";
-import Script from "next/script";
+// import Script from "next/script";
 
-import styles from "./layout.module.css";
-import utilStyles from "../styles/utils.module.css";
 import Link from "next/link";
 
-const name = "[Your Name]";
-export const siteTitle = "Next.js Sample Website";
+export const siteTitle = "Handy Record";
+const nvaList = [
+  { name: "HOME", path: "/", code: "HOME" },
+  { name: "POSTS", path: "/posts", code: "POSTS" },
+  { name: "ABOUT", path: "/about", code: "ABOUT" },
+];
 
 export default function Layout({ children, home }) {
   return (
-    <div className={styles.container}>
+    <div className="wmm-container">
       <Head>
-        <link rel="icon" href="/favicon.ico" />
-        <meta
-          name="description"
-          content="Learn how to build a personal website using Next.js"
-        />
+        <link rel="icon" type="image/svg+xml" href="/images/logo_black.svg" />
+        <meta name="description" content="Jotting down occasional thoughts." />
         <meta
           property="og:image"
           content={`https://og-image.vercel.app/${encodeURI(
@@ -26,53 +25,39 @@ export default function Layout({ children, home }) {
         />
         <meta name="og:title" content={siteTitle} />
         <meta name="twitter:card" content="summary_large_image" />
+        <title>{siteTitle}</title>
       </Head>
-      <Script
-        src="https://connect.facebook.net/en_US/sdk.js"
-        strategy="lazyOnload"
-        onLoad={() =>
-          console.log(`script loaded correctly, window.FB has been populated`)
-        }
-      />
-      <header className={styles.header}>
-        {home ? (
-          <>
+      <header className="wmm-header">
+        <main className="wmm-wrap flex items-center justify-between">
+          <div className="flex items-center">
             <Image
               priority
-              src="/images/profile.jpg"
-              className={utilStyles.borderCircle}
-              height={144}
-              width={144}
-              alt={name}
+              src="/images/logo_white.svg"
+              height={20}
+              width={20}
+              alt={siteTitle}
             />
-            <h1 className={utilStyles.heading2Xl}>{name}</h1>
-          </>
-        ) : (
-          <>
             <Link href="/">
-              <Image
-                priority
-                src="/images/profile.jpg"
-                className={utilStyles.borderCircle}
-                height={108}
-                width={108}
-                alt={name}
-              />
+              <span className="font-semibold ml-2">{siteTitle}</span>
             </Link>
-            <h2 className={utilStyles.headingLg}>
-              <Link href="/" className={utilStyles.colorInherit}>
-                {name}
+          </div>
+          <div>
+            {nvaList.map((navItem) => (
+              <Link href={navItem.path} key={navItem.path}>
+                <span className="ml-3">{navItem.name}</span>
               </Link>
-            </h2>
-          </>
-        )}
+            ))}
+          </div>
+        </main>
       </header>
-      <main>{children}</main>
-      {!home && (
-        <div className={styles.backToHome}>
-          <Link href="/">← Back to home</Link>
+      <main className="wmm-main">
+        <div className="wmm-wrap">{children}</div>
+      </main>
+      <footer className="wmm-footer">
+        <div className="wmm-wrap">
+          Handy Record ©{new Date().getFullYear()} Created by Arvin
         </div>
-      )}
+      </footer>
     </div>
   );
 }
