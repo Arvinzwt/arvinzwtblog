@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Image from "next/image";
+import { useRouter } from "next/router";
 // import Script from "next/script";
 
 import Link from "next/link";
@@ -10,6 +11,32 @@ const nvaList = [
   { name: "POSTS", path: "/posts", code: "POSTS" },
   { name: "ABOUT", path: "/about", code: "ABOUT" },
 ];
+
+const NavLink = ({ href, children }) => {
+  const router = useRouter();
+
+  // 判断当前路由是否激活
+  const isActive = router.pathname === href;
+  // 判断路由是否处于 pending 状态（例如，正在加载新页面）
+  const isPending = router.asPath === href && !router.isReady;
+
+  // 根据 isActive 和 isPending 动态生成 className
+  const activeName = ({ isActive, isPending }) => {
+    return isActive
+      ? "text-yellow-600 font-semibold"
+      : isPending
+        ? "text-gray-300 font-semibold"
+        : "font-semibold";
+  };
+
+  const className = activeName({ isActive, isPending });
+
+  return (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  );
+};
 
 export default function Layout({ children, home }) {
   return (
@@ -43,9 +70,9 @@ export default function Layout({ children, home }) {
           </div>
           <div>
             {nvaList.map((navItem) => (
-              <Link href={navItem.path} key={navItem.path}>
+              <NavLink href={navItem.path} key={navItem.path}>
                 <span className="ml-3">{navItem.name}</span>
-              </Link>
+              </NavLink>
             ))}
           </div>
         </main>
