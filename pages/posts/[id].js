@@ -2,6 +2,7 @@ import Layout from "../../components/layout";
 import { getAllPostIds, getPostData } from "../../lib/posts";
 import Head from "next/head";
 import { ArchiveTag } from "../../components/archiveTag";
+import "../../styles/github-markdown.css";
 
 export default function Post({ postData }) {
   return (
@@ -26,7 +27,7 @@ export default function Post({ postData }) {
           </span>
         </div>
         <div
-          className="wmm-posts"
+          className="markdown-body"
           dangerouslySetInnerHTML={{ __html: postData.contentHtml }}
         />
       </article>
