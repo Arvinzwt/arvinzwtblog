@@ -1,11 +1,12 @@
 ---
-title: 'vue+websocket模拟即时通讯'
-date: '2020-09-23'
-tag: 'javascript'
-description: '这是使用vue+websocket模拟即时通讯的demo'
+title: "vue+websocket模拟即时通讯"
+date: "2020-09-23"
+tag: "javascript"
+description: "这是使用vue+websocket模拟即时通讯的demo"
 ---
 
 ### 什么是WebSocket?
+
 WebSocket 是 HTML5 开始提供的一种在单个 TCP 连接上进行全双工通讯的协议。
 
 WebSocket 使得客户端和服务器之间的数据交换变得更加简单，允许服务端主动向客户端推送数据。在 WebSocket API 中，浏览器和服务器只需要完成一次握手，两者之间就直接可以创建持久性的连接，并进行双向数据传输。
@@ -16,34 +17,40 @@ HTML5 定义的 WebSocket 协议，能更好的节省服务器资源和带宽，
 
 ### WebSocket 事件
 
-事件|事件处理程序|描述
----|:--:|---:
-open|Socket.onopen|连接建立时触发
-message|Socket.onmessage|客户端接收服务端数据时触发
-error|Socket.onerror|通信发生错误时触发
-close|Socket.onclose|连接关闭时触发
+| 事件    |   事件处理程序   |                       描述 |
+| ------- | :--------------: | -------------------------: |
+| open    |  Socket.onopen   |             连接建立时触发 |
+| message | Socket.onmessage | 客户端接收服务端数据时触发 |
+| error   |  Socket.onerror  |         通信发生错误时触发 |
+| close   |  Socket.onclose  |             连接关闭时触发 |
 
 ### WebSocket 方法
 
-方法|描述
----|:--:
-Socket.send()|使用连接发送数据
-Socket.close()|关闭连接
-              
+| 方法           |       描述       |
+| -------------- | :--------------: |
+| Socket.send()  | 使用连接发送数据 |
+| Socket.close() |     关闭连接     |
+
 ### 示例
 
 #### 1.客户端搭建
+
 客户端是由vue脚手架搭建，如果比较熟的小伙伴可直接跳到后面，首先打开命令行工具，全局安装vue-cli
+
 ```
 npm install -g @vue/cli
 ```
+
 然后创建一个新项目
+
 ```
 vue create my-project
 # OR
 vue ui
 ```
+
 按照自己的喜好点点点，构建完成后，找到页面/src/App.vue,覆盖以下代码
+
 ```
  <template>
    <div class="container">
@@ -62,7 +69,7 @@ vue ui
      </ul>
    </div>
  </template>
- 
+
  <script>
  export default {
    data() {
@@ -80,30 +87,30 @@ vue ui
      openConnect() {
        if ("WebSocket" in window) {//判定ws兼容
          const ws = new WebSocket("ws://localhost:8080");//地址为服务器接口地址
- 
+
          ws.onopen = () => { // 连接成功时
            this.isConnected = true;
          };
- 
+
          ws.onmessage = (evt) => { // 发送信息时
            this.messageList.push(JSON.parse(evt.data));
          };
- 
+
          ws.onclose = () => { // 关闭连接时
            this.isConnected = false;
          };
- 
+
          ws.onerror = (err) => {  // 连接错误时
            console.log('err',err)
            this.isConnected = false;
          }
- 
+
          this.ws = ws;
        } else {
          alert("您的浏览器不支持 WebSocket!");
        }
      },
- 
+
      /**
       *@dec 发送信息
       */
@@ -113,7 +120,7 @@ vue ui
          this.message = "";
        }
      },
- 
+
      /**
       *@dec 关闭连接
       */
@@ -123,31 +130,35 @@ vue ui
    }
  }
  </script>
- 
+
  <style>
- 
+
  .type1 {
    color: #999;
  }
- 
+
  .type2 {
- 
+
  }
- 
+
  .type3 {
    color: #999;
  }
  </style>
 ```
+
 然后在命令行输入
-  ```
-  npm run serve
-  ```
+
+```
+npm run serve
+```
+
 启动服务，具体内容可参考[VUE-CLI](https://cli.vuejs.org/zh/)
 
 现在点击'打开连接'还是会报错，因为我们的后端服务还没开启，下面我们建立服务端
 
 #### 2.服务端
+
 服务端是用express搭建，是一个基于 Node.js 平台，搭建方法很简单，假定你已经安装了[Node.js](https://nodejs.org/en/)，接下来进入命令行工具，为你的应用创建一个目录，然后进入此目录并将其作为当前工作目录。
 
 ```
@@ -172,7 +183,9 @@ npm install express --save
 ```
 npm install ws --save
 ```
+
 安装完成后，在根目录下新建server.js，并写入内容
+
 ```
 const WebSocket = require('ws');
 const server = new WebSocket.Server({port: 8080});//端口号不要和客户端端口号重复
@@ -219,8 +232,11 @@ console.log(ws.uid)
 });
 
 ```
+
 在命令行内，启动express服务
+
 ```
-node server.js  
+node server.js
 ```
+
 具体命令可参考[Express中文网](https://www.expressjs.com.cn/starter/installing.html)，最后可以打开多个客户端页面，互相发消息啦，当然这只是个简单的本地模拟，如果想要更加具体，可以添加mysql来管理具体用户，这在里就不多说啦

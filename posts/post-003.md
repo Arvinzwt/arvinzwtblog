@@ -1,26 +1,32 @@
 ---
-title: 'webrtc'
-date: '2022-10-10'
-tag: 'javascript'
-description: '这是一个使用SkyRTC和SkyRTC-client搭建浏览器中音频、视频、文字聊天室的Demo'
+title: "webrtc"
+date: "2022-10-10"
+tag: "javascript"
+description: "这是一个使用SkyRTC和SkyRTC-client搭建浏览器中音频、视频、文字聊天室的Demo"
 ---
+
 ### 什么是WebRTC
+
 很久很久之前~~，其实也不太久，浏览器是不支持相互之间直接建立信道进行通信，就像我想从页面a和页面b之间进行数据交流，一般都是a发送到服务器上，服务器把a的消息中转到b上，反之亦然，这样一段消息要有两次通信，还要首受到两次通讯的带宽限制，像是视频音频之类的数据流直接打出了GG，所以就WebRTC诞生啦~
 WebRTC就是个JavaScript接口，能够通过浏览器调用摄像头、话筒，然后建立两个浏览器之前的信道，这个信道可以发送任数据，而不通过服务器
 
 ### 示例
+
 #### 1.搭建本地服务
+
 首先我们先建立个本地服务，我用的是express,假定你已经安装了[Node.js](https://nodejs.org/en/)，接下来进入命令行工具，为你的应用创建一个目录，然后进入此目录并将其作为当前工作目录。
 
 ```
 mkdir myapp
 cd myapp
 ```
+
 然后通过命令，创建一个 package.json 文件
 
 ```
 npm init -y
 ```
+
 接下来在 myapp 目录下安装 Express 并将其保存到依赖列表中
 
 ```
@@ -32,15 +38,21 @@ npm install express --save
 ```
 npm install ws --save
 ```
+
 安装skyrtc（一个集成的nodejs编写的WebRTC服务端库）
+
 ```
 npm install skyrtc --save
 ```
+
 安装uuid（能够快速生成随机的UID）
+
 ```
 npm install uuid --save
 ```
+
 安装完成后，在根目录下新建server.js，并写入内容
+
 ```
 const express = require('express')
 const app = express()
@@ -57,34 +69,46 @@ app.listen(port, () => {
     console.log(`Example app listening on http://localhost:${port}`)
 })
 ```
+
 在命令行输入
+
 ```
 node server.js
 ```
+
 打开[http://localhost:3000](http://localhost:3000)看到"Hello World!",说明本地服务好啦!
 但是每次都要执行修改都要重新启动服务，所以我们安装一个nodemon来监听测目录中的文件更改,并自动重新启动
+
 ```
 npm install nodemon --save
 ```
+
 然后修改根目录下的package.json文件中的scripts为
+
 ```
     "scripts": {
         "start": "nodemon server.js"
     },
 ```
+
 然后在命令行输入命令
+
 ```
 npm run start
 ```
+
 打开[http://localhost:3000](http://localhost:3000)看到"Hello World!",修改server.js中的sender
+
 ```
 app.get('/',(req,res)=>{
     res.send('hello webrtc')
 })
 ```
+
 刷新[http://localhost:3000]页面，你会发现没有重启服务，页面也变成了hello webrtc
 
 然后在根目录新建public/demo.html 并写入
+
 ```
 <!DOCTYPE html>
 <html lang="en">
@@ -214,4 +238,5 @@ app.get('/',(req,res)=>{
 </script>
 </html>
 ```
+
 打开[http://localhost:3000/demo.html](http://localhost:3000/demo.html)并刷新就可以体验基本的webrtc功能啦

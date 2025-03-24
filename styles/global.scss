@@ -73,7 +73,7 @@ body {
   text-align: center;
 }
 
-.wmm-h-full{
+.wmm-h-full {
   height: calc(100vh - 126px);
 }
 
@@ -82,7 +82,7 @@ body {
     background: transparent;
     text-decoration: none;
     -webkit-tap-highlight-color: transparent;
-    color: #409EFF;
+    color: #409eff;
     cursor: pointer;
 
     :active {
@@ -90,11 +90,18 @@ body {
     }
   }
 
-  ul, ol {
+  ul,
+  ol {
     list-style: none outside none;
   }
 
-  h1, h2, h3, h4, h5, h6, strong {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  strong {
     font-weight: 600;
   }
 
@@ -102,13 +109,17 @@ body {
     border: 0;
   }
 
-
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     padding: 15px 0 8px;
   }
 
-
-  p, h4 {
+  p,
+  h4 {
     text-indent: 30px;
   }
 
@@ -131,7 +142,8 @@ body {
     font-size: 13px;
     border-collapse: collapse;
 
-    th, td {
+    th,
+    td {
       padding: 6px 8px;
       border-right: 1px solid #eee;
       border-bottom: 1px solid #eee;
@@ -143,7 +155,6 @@ body {
     }
 
     td {
-
     }
   }
 

@@ -1,16 +1,16 @@
 import Head from "next/head";
-import Layout, {siteTitle} from "../../components/layout";
-import {getSortedPostsData, getSortedTagData} from "../../lib/posts";
+import Layout, { siteTitle } from "../../components/layout";
+import { getSortedPostsData, getSortedTagData } from "../../lib/posts";
 import Link from "next/link";
-import {ArchiveTag} from "../../components/archiveTag";
-import {useState} from "react";
+import { ArchiveTag } from "../../components/archiveTag";
+import { useState } from "react";
 import clsx from "clsx";
 
-function HighlightText({text, filterText}) {
+function HighlightText({ text, filterText }) {
   if (!filterText) return text; // 如果没有筛选条件，返回原文本
 
   // 找到匹配的部分
-  const regex = new RegExp(`(${filterText})`, 'gi');
+  const regex = new RegExp(`(${filterText})`, "gi");
   const parts = text.split(regex);
 
   return (
@@ -22,33 +22,38 @@ function HighlightText({text, filterText}) {
           </span>
         ) : (
           part
-        )
+        ),
       )}
     </>
   );
 }
 
-export default function Posts({allPostsData, allTagData}) {
-  const [tag, setTag] = useState('');
-  const [filterText, setFilterText] = useState('');
+export default function Posts({ allPostsData, allTagData }) {
+  const [tag, setTag] = useState("");
+  const [filterText, setFilterText] = useState("");
 
-  const postsData = allPostsData.filter(aItem => {
-    return (aItem.title.toLowerCase().includes(filterText.toLowerCase()))
-  }).filter(aItem => {
-    return aItem.tag.includes(tag)
-  })
+  const postsData = allPostsData
+    .filter((aItem) => {
+      return aItem.title.toLowerCase().includes(filterText.toLowerCase());
+    })
+    .filter((aItem) => {
+      return aItem.tag.includes(tag);
+    });
 
   function handleTagTap(rTag) {
     if (tag === rTag) {
-      setTag('')
+      setTag("");
     } else {
-      setTag(rTag)
+      setTag(rTag);
     }
   }
 
-  function lineHeightTxt(txt = '') {
-    const regex = new RegExp(filterText, 'gi')
-    return txt.replace(regex, (match) => `<span style="color: #1dcbcb;">${match}</span>`)
+  function lineHeightTxt(txt = "") {
+    const regex = new RegExp(filterText, "gi");
+    return txt.replace(
+      regex,
+      (match) => `<span style="color: #1dcbcb;">${match}</span>`,
+    );
   }
 
   return (
@@ -59,13 +64,18 @@ export default function Posts({allPostsData, allTagData}) {
       <main className="flex py-3">
         <section className="px-3 bg-white mr-3 rounded-lg flex-1">
           <ul className="">
-            {postsData.length > 0 ?
+            {postsData.length > 0 ? (
               postsData.map((aItem) => (
-                <li className="border border-solid border-gray-200 rounded-lg my-3 transition-all duration-300 p-6 bg-white relative"
-                    key={aItem.id}>
+                <li
+                  className="border border-solid border-gray-200 rounded-lg my-3 transition-all duration-300 p-6 bg-white relative"
+                  key={aItem.id}
+                >
                   <Link href={`/posts/${aItem.id}`}>
                     <p className="text-base font-semibold flex items-center justify-between">
-                      <HighlightText text={aItem.title} filterText={filterText}/>
+                      <HighlightText
+                        text={aItem.title}
+                        filterText={filterText}
+                      />
                       <ArchiveTag>{aItem.tag}</ArchiveTag>
                     </p>
                   </Link>
@@ -78,11 +88,12 @@ export default function Posts({allPostsData, allTagData}) {
                     </span>
                   </div>
                 </li>
-              )) :
+              ))
+            ) : (
               <li className="text-center text-gray-500 py-4">
                 没有找到相关数据
               </li>
-            }
+            )}
           </ul>
         </section>
         <section className="px-3 pt-3 rounded-lg bg-white shadow-sm w-60 sticky">
@@ -103,15 +114,23 @@ export default function Posts({allPostsData, allTagData}) {
           <div className="mr-2 flex items-center flex-wrap">
             {allTagData.map((rItem) => {
               return (
-                <span className="my-2" key={rItem} onClick={() => handleTagTap(rItem)}>
-                <ArchiveTag propClass={clsx([
-                  `cursor-pointer`,
-                  'mx-3',
-                  {
-                    'text-yellow-600 border-yellow-600': rItem === tag
-                  }
-                ])}>{rItem}</ArchiveTag>
-              </span>
+                <span
+                  className="my-2"
+                  key={rItem}
+                  onClick={() => handleTagTap(rItem)}
+                >
+                  <ArchiveTag
+                    propClass={clsx([
+                      `cursor-pointer`,
+                      "mx-3",
+                      {
+                        "text-yellow-600 border-yellow-600": rItem === tag,
+                      },
+                    ])}
+                  >
+                    {rItem}
+                  </ArchiveTag>
+                </span>
               );
             })}
           </div>

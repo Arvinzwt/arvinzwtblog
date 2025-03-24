@@ -16,7 +16,8 @@ const NavLink = ({ href, children }) => {
   const router = useRouter();
 
   // 判断当前路由是否激活
-  const isActive = router.pathname === href || router.pathname.startsWith(`${href}/`);
+  const isActive =
+    router.pathname === href || router.pathname.startsWith(`${href}/`);
   // 判断路由是否处于 pending 状态（例如，正在加载新页面）
   const isPending = router.asPath === href && !router.isReady;
 

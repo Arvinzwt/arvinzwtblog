@@ -1,30 +1,40 @@
 ---
-title: 'vue-socket.io'
-date: '2022-12-21'
-tag: 'javascript'
-description: 'vue-socket.io+typescript+vue脚手架的简单使用'
+title: "vue-socket.io"
+date: "2022-12-21"
+tag: "javascript"
+description: "vue-socket.io+typescript+vue脚手架的简单使用"
 ---
+
 ### 什么是vue-socket.io
+
 简单来说就是针对vue包装后的socket.io-client，嗯，官方文档可谓言简意赅，而且因为我用的vue+typescript，一些坑可谓是不可描述的酸爽，所以记 录如下，为后来趟坑的人留一点纪念
 
 #### 1.搭建vue脚手架
+
 我们用官方指令直接跑就行,如果不知道的小伙伴怎么搭建的小伙伴可以看一下官方文档 [VueCli](https://cli.vuejs.org/zh/)
+
 ```
 vue create my-project
 ```
+
 我们选默认的babel,typescript,router,vuex,eslint就行，然后
+
 ```
 cd my-project
 npm run serve
 ```
+
 打开浏览器，查看 [http://localhost:8080/](http://localhost:8080/)，就能看到本地服务了
 
 #### 2.搭建后端服务
+
 本地服务搭建好之后，不要着急，我们再搭建一个简单的express后端服务，来创建我们的socket连接，新建文件夹，名称随意,打开文件夹所在的命令行工具，输入
+
 ```
 npm init -y
 npm install express socket.io
 ```
+
 然后新建index.js在文件夹内,并写入
 
 ```
@@ -63,19 +73,25 @@ http.listen(3000, () => {
 ```
 
 然后启动服务：
+
 ```
 node index.js
 ```
+
 打开[http://localhost:3000/](http://localhost:3000/),看到hello world 说明后端服务启动成功,需要注意的是，socket.io处理跨域v2版本和v3版本是有挺大区别的，具体请参考[https://socket.io/docs/v3/migrating-from-2-x-to-3-0/#CORS-handling](https://socket.io/docs/v3/migrating-from-2-x-to-3-0/#CORS-handling)
 
 #### 2.连接socket
+
 然后回到我们的脚手架文件夹内，打开命令行工具，安装vue-socket.io和socket.io-client（其实安装vue-socket.io就行，他就是封装之后的socket.io-client,但是神奇的是 vue-socket.io并没有直接写options的地址，只好在引入socket.io-client写配置文件）
+
 ```
-npm install vue-socket.io --save 
-npm install socket.io-client   
+npm install vue-socket.io --save
+npm install socket.io-client
 ```
+
 再修改src/main.ts
-````
+
+```
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -115,9 +131,11 @@ new Vue({
     render: h => h(App)
 }).$mount('#app')
 
-````
+```
+
 http://localhost:3000/是服务器的地址，vuex是vue-socket.io在vuex上的一些配置，即当后端通过socket发送给客户端数据时，vue-socket.io已经封装处理过，会触发vuex上的对应的action和 mutation，所以我们处理一下vuex,打开/src/store/index.ts改写为
-````
+
+```
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Socket from './socket'
@@ -135,9 +153,11 @@ export default new Vuex.Store({
       Socket
   }
 })
-````
+```
+
 然后在/src/store下新建socket.ts并写入
-````
+
+```
 export default {
     namespaced: true,
     state: {
@@ -163,9 +183,11 @@ export default {
     getters: {}
 }
 
-````
+```
+
 修改src/views/Home.vue
-````
+
+```
 <template>
     <div class="home">
         <div>{{ usr }}</div>
@@ -213,20 +235,24 @@ export default class Home extends Vue {
 }
 
 </script>
-````
+```
+
 打开控制台，选择Network，选择WS，点击你接口的那个连接，就可以看到完整的socket通讯了，值得一提的是，监听连接成功的接口
-````
+
+```
  this.sockets.subscribe('connect', () => {
             console.log('连接成功')
         })
-````
+```
+
 如果有延迟会再也接不到，比如改一下
 
-````
+```
  setTimeout(()=>{
     this.sockets.subscribe('connect', () => {
             console.log('连接成功')
         })
  },300)
-````
+```
+
 就无法监听连接成功事件，但事实上连接时已经成功的，需要警惕下~~
