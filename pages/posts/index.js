@@ -1,8 +1,8 @@
 import Head from "next/head";
 import Layout, {siteTitle} from "../../components/layout";
-import {getSortedPostsData, getSortedRemarkData} from "../../lib/posts";
+import {getSortedPostsData, getSortedTagData} from "../../lib/posts";
 import Link from "next/link";
-import {ArchiveRemark} from "../../components/archiveRemark";
+import {ArchiveTag} from "../../components/archiveTag";
 import {useState} from "react";
 import clsx from "clsx";
 
@@ -28,23 +28,21 @@ function HighlightText({text, filterText}) {
   );
 }
 
-export default function Posts({allPostsData, allRemarkData}) {
-  const [remark, setRemark] = useState('');
+export default function Posts({allPostsData, allTagData}) {
+  const [tag, setTag] = useState('');
   const [filterText, setFilterText] = useState('');
 
   const postsData = allPostsData.filter(aItem => {
     return (aItem.title.toLowerCase().includes(filterText.toLowerCase()))
   }).filter(aItem => {
-    return aItem.remark.some((rItem) =>
-      rItem.toLowerCase().includes(remark)
-    )
+    return aItem.tag.includes(tag)
   })
 
-  function handleRemarkTap(rRemark) {
-    if (remark === rRemark) {
-      setRemark('')
+  function handleTagTap(rTag) {
+    if (tag === rTag) {
+      setTag('')
     } else {
-      setRemark(rRemark)
+      setTag(rTag)
     }
   }
 
@@ -58,24 +56,26 @@ export default function Posts({allPostsData, allRemarkData}) {
       <Head>
         <title>{siteTitle}</title>
       </Head>
-      <main className="flex mt-3">
-        <section className="p-3 rounded-lg bg-white flex-1 shadow-sm mr-3">
-          <ul>
+      <main className="flex py-3">
+        <section className="px-3 bg-white mr-3 rounded-lg flex-1">
+          <ul className="">
             {postsData.length > 0 ?
               postsData.map((aItem) => (
-                <li className="px-3 py-2" key={aItem.id}>
+                <li className="border border-solid border-gray-200 rounded-lg my-3 transition-all duration-300 p-6 bg-white relative"
+                    key={aItem.id}>
                   <Link href={`/posts/${aItem.id}`}>
-                    <p className="text-base font-semibold">
+                    <p className="text-base font-semibold flex items-center justify-between">
                       <HighlightText text={aItem.title} filterText={filterText}/>
+                      <ArchiveTag>{aItem.tag}</ArchiveTag>
                     </p>
                   </Link>
-                  <div className="flex items-center mt-2">
-                    <span className="text-sm text-gray-500 text-nowrap mr-4">{aItem.date}</span>
-                    <p className="flex items-center flex-wrap overflow-hidden">
-                      {aItem.remark.map((rItem) => {
-                        return <ArchiveRemark key={rItem}>{rItem}</ArchiveRemark>;
-                      })}
-                    </p>
+                  <div className="leading-normal text-sm mb-5">
+                    {aItem.description}
+                  </div>
+                  <div className="mt-1 text-right">
+                    <span className="text-xs text-gray-400 text-nowrap mr-4">
+                      posted @{aItem.date} by arvin
+                    </span>
                   </div>
                 </li>
               )) :
@@ -85,7 +85,7 @@ export default function Posts({allPostsData, allRemarkData}) {
             }
           </ul>
         </section>
-        <section className="p-3 rounded-lg bg-white shadow-sm w-80">
+        <section className="px-3 pt-3 rounded-lg bg-white shadow-sm w-60 sticky">
           <div className="mb-2">
             <input
               type="text"
@@ -101,15 +101,16 @@ export default function Posts({allPostsData, allRemarkData}) {
             />
           </div>
           <div className="mr-2 flex items-center flex-wrap">
-            {allRemarkData.map((rItem) => {
+            {allTagData.map((rItem) => {
               return (
-                <span className="my-2" key={rItem} onClick={() => handleRemarkTap(rItem)}>
-                <ArchiveRemark propClass={clsx([
+                <span className="my-2" key={rItem} onClick={() => handleTagTap(rItem)}>
+                <ArchiveTag propClass={clsx([
                   `cursor-pointer`,
+                  'mx-3',
                   {
-                    'text-blue-500': rItem === remark
+                    'text-yellow-600 border-yellow-600': rItem === tag
                   }
-                ])}>{rItem}</ArchiveRemark>
+                ])}>{rItem}</ArchiveTag>
               </span>
               );
             })}
@@ -122,11 +123,11 @@ export default function Posts({allPostsData, allRemarkData}) {
 
 export async function getStaticProps() {
   const allPostsData = getSortedPostsData();
-  const allRemarkData = getSortedRemarkData();
+  const allTagData = getSortedTagData();
   return {
     props: {
       allPostsData,
-      allRemarkData,
+      allTagData,
     },
   };
 }
