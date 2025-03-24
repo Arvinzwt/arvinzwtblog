@@ -4,10 +4,13 @@ date: "2024-07-05"
 tag: "WebGL2"
 description: ""
 ---
+
 回顾一下，上篇我们讲了如何绘制点、线、三角形，源码：[01_pointAndLine.html](https://gitee.com/arvinzwt/webgl2-test/blob/master/01_pointAndLine.html)
 
 现在我们做一点调整，通过片段着色器变量传参，来修改颜色
+
 - 修改片段着色器属性，添加全局变量
+
 ```
 const FRAGMENT_SHADER_SOURCE = `#version 300 es
   precision highp float;
@@ -18,11 +21,15 @@ const FRAGMENT_SHADER_SOURCE = `#version 300 es
   }
 `
 ```
+
 - 读取该变量在片段着色器的位置
+
 ```
 const colorLocation = gl.getUniformLocation(shaderProgram, 'u_color');
 ```
+
 - 在绘制过程中，向片段着色器传递变量
+
 ```
 gl.uniform4fv(colorLocation, [
   Math.random(),
@@ -31,7 +38,9 @@ gl.uniform4fv(colorLocation, [
   1,
 ]);
 ```
+
 整体代码如下：
+
 ```
 <!DOCTYPE html>
 <html lang='en'>
@@ -216,9 +225,11 @@ gl.uniform4fv(colorLocation, [
 </script>
 </html>
 ```
+
 刷新页面，可看到颜色已经随机改变
 
 - 而实际应用中，canvas的大小一般是根据页面大小动态变化的，而style设置的宽高和属性栏的宽高不一致时，canvas往往会变形扭曲，我们可以在渲染时添加以下处理：
+
 ```
   function resizeCanvasToDisplaySize(canvas, multiplier) {
     multiplier = multiplier || 1;
@@ -232,11 +243,13 @@ gl.uniform4fv(colorLocation, [
     return false;
   }
 ```
+
 我们添加一个`webgl2fundamentals`官方提供的，学习用的小工具处理
 源码:[webgl-utils](https://webgl2fundamentals.org/webgl/resources/webgl-utils.js)
 
 - 当前的空间坐标为-1～1，与我们前端常用的像素差异有点多，可以通过调整`gl_Position`属性来将顶点坐标从屏幕坐标系转换到裁剪空间坐标系
--  - 调整顶点编辑器的如下
+- - 调整顶点编辑器的如下
+
 ```
 const VERTEX_SHADER_SOURCE = `#version 300 es
   in vec2 a_position; // 输入顶点坐标
@@ -257,15 +270,21 @@ const VERTEX_SHADER_SOURCE = `#version 300 es
   }
 `
 ```
+
 - - 获取`u_resolution`的位置属性
+
 ```
 const resolutionUniformLocation = gl.getUniformLocation(shaderProgram, 'u_resolution');
 ```
+
 - - 将数据同步到gpu
+
 ```
 gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 ```
+
 - - 坐标系已经发生变化，调整图像坐标大小
+
 ```
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
   // 点的顶点数据
@@ -293,6 +312,7 @@ gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
   // 0.0, 0.0
 ]), gl.STATIC_DRAW)
 ```
+
 整体代码如下：
 [02_colorAndWidth](https://gitee.com/arvinzwt/webgl2-test/blob/master/02_colorAndWidth.html)
 
@@ -303,4 +323,5 @@ gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
 - 下一篇章：[03. WEBGL2学习笔记：平移、旋转、缩放](https://juejin.cn/post/7387693427373113355)
 
 ### 参考文献：
+
 https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-fundamentals.html#toc

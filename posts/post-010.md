@@ -4,6 +4,7 @@ date: "2024-07-03"
 tag: "WebGL2"
 description: ""
 ---
+
 我想象中的WEBGL2：3d打印机，一按按钮，自动生成3d模型。
 
 实际上的WEBGL2：给了个锤子和凿子，想要什么自己弄吧～
@@ -11,10 +12,12 @@ description: ""
 如果说我们做一个模型类比于雕像的话，webgl2确实只是个锤子，它只能够画**点、线、三角形**，所有的3d模型都是这三者复杂的**组合**。
 
 而webgl2怎么画点、线、三角形呢？它只做了两件事，**剪辑空间坐标(Clip space coordinates)和颜色**，它有两大法宝：
+
 - **顶点着色器(Vertex Shader)**：实现剪辑空间坐标；
 - **片段着色器(Fragment Shader)**：实现调色。
 
 而作为程序员的我们所做的事情其实也就是两件：
+
 - **点着色器**：提供剪辑空间坐标；
 - **片段着色器**：提供调色；
 
@@ -29,6 +32,6 @@ description: ""
 
 而如何根据这些属性生成我们想要的形状呢？且看下文：[01. WEBGL2学习-点、线、三角形](https://juejin.cn/post/7387094749931438134)
 
-
 ## 参考文献
+
 https://webgl2fundamentals.org/webgl/lessons/webgl-fundamentals.html

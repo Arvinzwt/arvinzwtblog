@@ -1,6 +1,6 @@
 ---
 title: "Raspberry系列4：通过DNS快速找到树莓派IP地址"
-date: "2022-06-26"
+date: "2022-07-01"
 tag: "Raspberry"
 description: "通过ip连接操作树莓派过程组"
 ---
@@ -27,7 +27,7 @@ ping raspberrypi
 ping: cannot resolve raspberrypi: Unknown host
 ```
 
-可以试试mdns，直接使用设备的主机名加 `.local` 后缀来进行解析
+可以试试mdns，直接使用设备的主机名加 `.local` 后缀来进行解析
 
 ```
 ping raspberrypi.local

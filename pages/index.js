@@ -1,12 +1,12 @@
 import Layout from "../components/layout";
-import {useEffect, useRef} from "react";
+import { useEffect, useRef } from "react";
 
 export default function Home() {
   const canvasRef = useRef(null);
   const cConfig = useRef({
     cw: 800,
     ch: 400,
-  })
+  });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -35,7 +35,8 @@ export default function Home() {
         width={`${cConfig.cw}px`}
         height={`${cConfig.ch}px`}
         className="border border-solid border-red-500"
-        ref={canvasRef}/>
+        ref={canvasRef}
+      />
     </Layout>
   );
 }

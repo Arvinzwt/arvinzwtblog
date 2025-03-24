@@ -4,9 +4,10 @@ date: "2024-09-02"
 tag: "WebGL2"
 description: ""
 ---
+
 回顾一下上篇：[ # 03. WEBGL2学习笔记：平移、旋转、缩放](https://juejin.cn/user/2102689080284888)
 
-源码：[03\_translateAndRotate](https://gitee.com/arvinzwt/webgl2-test/blob/master/03_translateAndRotate.html)
+源码：[03_translateAndRotate](https://gitee.com/arvinzwt/webgl2-test/blob/master/03_translateAndRotate.html)
 
 ### 1.动画
 
@@ -132,7 +133,7 @@ description: ""
 
 运行，出现界面如下：
 
-![QQ\_1725260386045.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/6b39b1d2ef5148398cc56cd5e986268f~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAg5p2h5b2i56CB:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMjEwMjY4OTA4MDI4NDg4OCJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1743402586&x-orig-sign=CMnxsCim0%2BccuZjkyCJarFIBWDM%3D)
+![QQ_1725260386045.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/6b39b1d2ef5148398cc56cd5e986268f~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAg5p2h5b2i56CB:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMjEwMjY4OTA4MDI4NDg4OCJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1743402586&x-orig-sign=CMnxsCim0%2BccuZjkyCJarFIBWDM%3D)
 
 修改顶点着色器，添加矩阵：`u_matrix`
 
@@ -176,7 +177,7 @@ description: ""
     ]));
 
 效果如下：
-![QQ\_1725261012716.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/67d3aaf73cbd40ca935f64f1f4f55f50~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAg5p2h5b2i56CB:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMjEwMjY4OTA4MDI4NDg4OCJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1743402586&x-orig-sign=m7cWild0t%2FDbkLr7Duk6%2FY342Os%3D)
+![QQ_1725261012716.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/67d3aaf73cbd40ca935f64f1f4f55f50~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAg5p2h5b2i56CB:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMjEwMjY4OTA4MDI4NDg4OCJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1743402586&x-orig-sign=m7cWild0t%2FDbkLr7Duk6%2FY342Os%3D)
 最终代码如下：
 
     function main() {

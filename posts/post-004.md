@@ -78,11 +78,13 @@ http.listen(3000, () => {
 node index.js
 ```
 
-打开[http://localhost:3000/](http://localhost:3000/),看到hello world 说明后端服务启动成功,需要注意的是，socket.io处理跨域v2版本和v3版本是有挺大区别的，具体请参考[https://socket.io/docs/v3/migrating-from-2-x-to-3-0/#CORS-handling](https://socket.io/docs/v3/migrating-from-2-x-to-3-0/#CORS-handling)
+打开[http://localhost:3000/](http://localhost:3000/),看到hello world
+说明后端服务启动成功,需要注意的是，socket.io处理跨域v2版本和v3版本是有挺大区别的，具体请参考[https://socket.io/docs/v3/migrating-from-2-x-to-3-0/#CORS-handling](https://socket.io/docs/v3/migrating-from-2-x-to-3-0/#CORS-handling)
 
 #### 2.连接socket
 
-然后回到我们的脚手架文件夹内，打开命令行工具，安装vue-socket.io和socket.io-client（其实安装vue-socket.io就行，他就是封装之后的socket.io-client,但是神奇的是 vue-socket.io并没有直接写options的地址，只好在引入socket.io-client写配置文件）
+然后回到我们的脚手架文件夹内，打开命令行工具，安装vue-socket.io和socket.io-client（其实安装vue-socket.io就行，他就是封装之后的socket.io-client,但是神奇的是
+vue-socket.io并没有直接写options的地址，只好在引入socket.io-client写配置文件）
 
 ```
 npm install vue-socket.io --save
@@ -133,7 +135,8 @@ new Vue({
 
 ```
 
-http://localhost:3000/是服务器的地址，vuex是vue-socket.io在vuex上的一些配置，即当后端通过socket发送给客户端数据时，vue-socket.io已经封装处理过，会触发vuex上的对应的action和 mutation，所以我们处理一下vuex,打开/src/store/index.ts改写为
+http://localhost:3000/是服务器的地址，vuex是vue-socket.io在vuex上的一些配置，即当后端通过socket发送给客户端数据时，vue-socket.io已经封装处理过，会触发vuex上的对应的action和
+mutation，所以我们处理一下vuex,打开/src/store/index.ts改写为
 
 ```
 import Vue from 'vue'

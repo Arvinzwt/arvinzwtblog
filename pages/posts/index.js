@@ -17,8 +17,12 @@ function HighlightText({ text, filterText }) {
     <>
       {parts.map((part, index) =>
         part.toLowerCase() === filterText.toLowerCase() ? (
-          <span key={index} className="text-blue-500">{part}</span>
-        ) : (part),
+          <span key={index} className="text-blue-500">
+            {part}
+          </span>
+        ) : (
+          part
+        ),
       )}
     </>
   );
