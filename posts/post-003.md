@@ -1,5 +1,5 @@
 ---
-title: "webrtc"
+title: "使用WebRTC搭建简易聊天室"
 date: "2022-10-10"
 tag: "WebRTC"
 description: "这是一个使用SkyRTC和SkyRTC-client搭建浏览器中音频、视频、文字聊天室的Demo"

@@ -1,5 +1,5 @@
 ---
-title: "Raspberry Pi OS 安装docker"
+title: "Raspberry系列1：安装docker"
 date: "2022-06-24"
 tag: "Raspberry"
 description: "Raspberry Pi OS 安装docker的简化流程"
