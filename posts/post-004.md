@@ -1,7 +1,7 @@
 ---
 title: "vue-socket.io"
 date: "2022-12-21"
-tag: "javascript"
+tag: "Socket"
 description: "vue-socket.io+typescript+vue脚手架的简单使用"
 ---
 

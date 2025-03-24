@@ -1,7 +1,7 @@
 ---
 title: "nuxtjs/auth的简单运用"
 date: "2022-10-10"
-tag: "javascript"
+tag: "Nuxt"
 description: "nuxtjs/auth模块的简单运用"
 ---
 

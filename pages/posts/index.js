@@ -17,12 +17,8 @@ function HighlightText({ text, filterText }) {
     <>
       {parts.map((part, index) =>
         part.toLowerCase() === filterText.toLowerCase() ? (
-          <span key={index} className="text-blue-500">
-            {part}
-          </span>
-        ) : (
-          part
-        ),
+          <span key={index} className="text-blue-500">{part}</span>
+        ) : (part),
       )}
     </>
   );
@@ -71,20 +67,22 @@ export default function Posts({ allPostsData, allTagData }) {
                   key={aItem.id}
                 >
                   <Link href={`/posts/${aItem.id}`}>
-                    <p className="text-base font-semibold flex items-center justify-between">
-                      <HighlightText
-                        text={aItem.title}
-                        filterText={filterText}
-                      />
+                    <div className="text-base font-semibold flex items-center justify-between">
+                      <p>
+                        <HighlightText
+                          text={aItem.title}
+                          filterText={filterText}
+                        />
+                      </p>
                       <ArchiveTag>{aItem.tag}</ArchiveTag>
-                    </p>
+                    </div>
                   </Link>
                   <div className="leading-normal text-sm mb-5">
                     {aItem.description}
                   </div>
                   <div className="mt-1 text-right">
-                    <span className="text-xs text-gray-400 text-nowrap mr-4">
-                      posted @{aItem.date} by arvin
+                    <span className="text-xs text-gray-400 text-nowrap">
+                      posted @{aItem.date}
                     </span>
                   </div>
                 </li>

@@ -1,7 +1,7 @@
 ---
 title: "vue+websocket模拟即时通讯"
 date: "2020-09-23"
-tag: "javascript"
+tag: "Socket"
 description: "这是使用vue+websocket模拟即时通讯的demo"
 ---
 
