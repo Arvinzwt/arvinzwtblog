@@ -11,7 +11,7 @@
     "reset": "sh reset.sh"
   },
   "dependencies": {
-    "@tailwindcss/postcss": "^4.0.15",
+    "@tailwindcss/postcss": "^4.0.17",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "gitalk": "^1.8.0",
@@ -29,7 +29,7 @@
     "remark-gfm": "^4.0.1",
     "remark-rehype": "^11.1.1",
     "remark-toc": "^9.0.0",
-    "tailwindcss": "^4.0.15"
+    "tailwindcss": "^4.0.17"
   },
   "engines": {
     "node": ">=18"
