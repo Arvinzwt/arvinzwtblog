@@ -6,7 +6,7 @@ const GitalkComponent = dynamic(() => import("gitalk/dist/gitalk-component"), {
   ssr: false,
 });
 
-export function UserComment({ children, propClass = "" }) {
+export function Gitalk({ children, propClass = "" }) {
   const [id, setId] = useState("default-id"); // 设置默认值
 
   useEffect(() => {

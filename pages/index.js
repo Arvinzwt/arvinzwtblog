@@ -1,4 +1,4 @@
-import Layout from "../components/layout";
+import Layout from "../components/Layout";
 import { useEffect, useRef } from "react";
 
 export default function Home() {

@@ -1,8 +1,8 @@
 import Head from "next/head";
-import Layout, { siteTitle } from "../../components/layout";
+import Layout, { siteTitle } from "../../components/Layout";
 import { getSortedPostsData, getSortedTagData } from "../../lib/posts";
 import Link from "next/link";
-import { ArchiveTag } from "../../components/archiveTag";
+import { ArchiveTag } from "../../components/ArchiveTag";
 import { useState } from "react";
 import clsx from "clsx";
 
@@ -114,18 +114,18 @@ export default function Posts({ allPostsData, allTagData }) {
                     key={rItem}
                     onClick={() => handleTagTap(rItem)}
                   >
-                  <ArchiveTag
-                    propClass={clsx([
-                      `cursor-pointer`,
-                      "mx-3",
-                      {
-                        "text-yellow-600 border-yellow-600": rItem === tag,
-                      },
-                    ])}
-                  >
-                    {rItem}
-                  </ArchiveTag>
-                </span>
+                    <ArchiveTag
+                      propClass={clsx([
+                        `cursor-pointer`,
+                        "mx-3",
+                        {
+                          "text-yellow-600 border-yellow-600": rItem === tag,
+                        },
+                      ])}
+                    >
+                      {rItem}
+                    </ArchiveTag>
+                  </span>
                 );
               })}
             </div>
