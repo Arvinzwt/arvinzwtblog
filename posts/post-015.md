@@ -5,7 +5,6 @@ tag: "WebGL2"
 description: ""
 ---
 
-```
-var name = "World";
-console.warn("Hello, " + name + "!")
+```javascript
+const example = "这是JavaScript代码";
 ```

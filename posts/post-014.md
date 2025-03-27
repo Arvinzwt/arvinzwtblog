@@ -12,8 +12,8 @@ description: ""
 ### 1.动画
 
 首先，做点调整，将缩放、平移、旋转去掉，修改后代码如下：
-
-    function main() {
+```javascript
+   function main() {
       const gl = document.querySelector('#glCanvas').getContext('webgl2')
       if (!gl) {
         alert('WebGL2 not supported')
@@ -131,6 +131,7 @@ description: ""
 
     main()
 
+```
 运行，出现界面如下：
 
 ![QQ_1725260386045.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/6b39b1d2ef5148398cc56cd5e986268f~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAg5p2h5b2i56CB:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMjEwMjY4OTA4MDI4NDg4OCJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1743402586&x-orig-sign=CMnxsCim0%2BccuZjkyCJarFIBWDM%3D)

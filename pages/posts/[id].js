@@ -5,6 +5,7 @@ import { ArchiveTag } from "../../components/archiveTag";
 import "../../styles/github-markdown.css";
 import { UserComment } from "../../components/userComment";
 import clsx from "clsx";
+import 'highlight.js/styles/github.css'; // 或者其他你喜欢的主题
 
 export default function Post({ postData }) {
   return (
