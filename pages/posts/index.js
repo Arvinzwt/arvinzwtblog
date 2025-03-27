@@ -48,14 +48,6 @@ export default function Posts({ allPostsData, allTagData }) {
     }
   }
 
-  function lineHeightTxt(txt = "") {
-    const regex = new RegExp(filterText, "gi");
-    return txt.replace(
-      regex,
-      (match) => `<span style="color: #1dcbcb;">${match}</span>`,
-    );
-  }
-
   return (
     <Layout home>
       <Head>
@@ -98,12 +90,13 @@ export default function Posts({ allPostsData, allTagData }) {
             )}
           </ul>
         </section>
-        <section className="px-3 pt-3 rounded-lg bg-white shadow-sm w-60 sticky">
-          <div className="mb-2">
-            <input
-              type="text"
-              onChange={(e) => setFilterText(e.target.value)}
-              className={`
+        <section className="w-60">
+          <div className="sticky p-3 bg-white rounded-lg shadow-sm top-[62px]">
+            <div className="mb-2">
+              <input
+                type="text"
+                onChange={(e) => setFilterText(e.target.value)}
+                className={`
                 w-full px-2 py-1
                 border border-gray-300 rounded-md
                 focus:outline-none focus:ring-0.5 focus:ring-blue-500 focus:border-blue-500
@@ -111,16 +104,16 @@ export default function Posts({ allPostsData, allTagData }) {
                 disabled:bg-gray-100 disabled:cursor-not-allowed
                 transition duration-200 ease-in-out
               `}
-            />
-          </div>
-          <div className="mr-2 flex items-center flex-wrap">
-            {allTagData.map((rItem) => {
-              return (
-                <span
-                  className="my-2"
-                  key={rItem}
-                  onClick={() => handleTagTap(rItem)}
-                >
+              />
+            </div>
+            <div className="mr-2 flex items-center flex-wrap">
+              {allTagData.map((rItem) => {
+                return (
+                  <span
+                    className="my-2"
+                    key={rItem}
+                    onClick={() => handleTagTap(rItem)}
+                  >
                   <ArchiveTag
                     propClass={clsx([
                       `cursor-pointer`,
@@ -133,8 +126,9 @@ export default function Posts({ allPostsData, allTagData }) {
                     {rItem}
                   </ArchiveTag>
                 </span>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </section>
       </main>
