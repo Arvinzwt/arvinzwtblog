@@ -3,6 +3,7 @@ import { getAllPostIds, getPostData } from "../../lib/posts";
 import Head from "next/head";
 import { ArchiveTag } from "../../components/archiveTag";
 import "../../styles/github-markdown.css";
+import {UserComment} from "../../components/userComment";
 
 export default function Post({ postData }) {
   return (
@@ -31,6 +32,7 @@ export default function Post({ postData }) {
           dangerouslySetInnerHTML={{ __html: postData.contentHtml }}
         />
       </article>
+      <UserComment/>
     </Layout>
   );
 }
