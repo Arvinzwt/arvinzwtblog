@@ -3,7 +3,8 @@ import { getAllPostIds, getPostData } from "../../lib/posts";
 import Head from "next/head";
 import { ArchiveTag } from "../../components/archiveTag";
 import "../../styles/github-markdown.css";
-import {UserComment} from "../../components/userComment";
+import { UserComment } from "../../components/userComment";
+import clsx from "clsx";
 
 export default function Post({ postData }) {
   return (
@@ -19,7 +20,14 @@ export default function Post({ postData }) {
         <ArchiveTag propClass="absolute top-[20px] right-[20px] rotate-10">
           {postData.tag}
         </ArchiveTag>
-        <p className="text-sm font-semibold p-5 m-5 bg-[#f7f8fb]">
+        <p
+          className={clsx([
+            "text-sm",
+            "font-semibold",
+            "bg-[#f7f8fb]",
+            { "p-5 m-5": postData.description },
+          ])}
+        >
           {postData.description}
         </p>
         <div className="text-right mb-6">
@@ -32,7 +40,7 @@ export default function Post({ postData }) {
           dangerouslySetInnerHTML={{ __html: postData.contentHtml }}
         />
       </article>
-      <UserComment/>
+      <UserComment />
     </Layout>
   );
 }
