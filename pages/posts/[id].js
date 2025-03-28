@@ -1,4 +1,4 @@
-import Layout from "../../components/Layout";
+import Layout2 from "../../components/Layout2";
 import { getAllPostIds, getPostData } from "../../lib/posts";
 import Head from "next/head";
 import { ArchiveTag } from "../../components/ArchiveTag";
@@ -9,11 +9,16 @@ import CopyButton from "../../components/CopyButton"; // 或者其他你喜欢�
 
 export default function Post({ postData }) {
   return (
-    <Layout>
+    <Layout2 sidebarContent={
+      <div
+        className="markdown-body wmm-catalogue"
+        dangerouslySetInnerHTML={{ __html: postData.tocHtml }}
+      />
+    }>
       <Head>
         <title>{postData.title}</title>
       </Head>
-      <article className="bg-white p-5 relative">
+      <article className="bg-white relative">
         <h1 className="font-bold text-2xl text-center">
           {postData.title}
           {/*<span className="text-xs text-gray-400 text-nowrap">{postData.remark}</span>*/}
@@ -37,17 +42,13 @@ export default function Post({ postData }) {
           </span>
         </div>
         <div
-          className="markdown-body border border-solid border-green-500"
-          dangerouslySetInnerHTML={{ __html: postData.tocHtml }}
-        />
-        <div
           className="markdown-body"
           dangerouslySetInnerHTML={{ __html: postData.contentHtml }}
         />
       </article>
       <Gitalk />
       <CopyButton />
-    </Layout>
+    </Layout2>
   );
 }
 
