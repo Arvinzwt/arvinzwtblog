@@ -1,10 +1,13 @@
 import Layout from "./Layout";
+import clsx from "clsx";
 
-export default function Layout2({ children, sidebarContent }) {
+export default function PostsLayout({ children, sidebarContent, propsClass }) {
   return (
-    <Layout home>
+    <Layout>
       <main className="flex py-3">
-        <section className="px-3 bg-white mr-3 rounded-lg flex-1">
+        <section
+          className={clsx(["mr-3 rounded-lg flex-1 overflow-hidden", propsClass])}
+        >
           {children}
         </section>
         <section className="w-60">

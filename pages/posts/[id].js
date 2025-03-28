@@ -1,4 +1,4 @@
-import Layout2 from "../../components/Layout2";
+import PostsLayout from "../../components/PostsLayout";
 import { getAllPostIds, getPostData } from "../../lib/posts";
 import Head from "next/head";
 import { ArchiveTag } from "../../components/ArchiveTag";
@@ -9,19 +9,20 @@ import CopyButton from "../../components/CopyButton"; // 或者其他你喜欢�
 
 export default function Post({ postData }) {
   return (
-    <Layout2 sidebarContent={
-      <div
-        className="markdown-body wmm-catalogue"
-        dangerouslySetInnerHTML={{ __html: postData.tocHtml }}
-      />
-    }>
+    <PostsLayout
+      sidebarContent={
+        <div
+          className="markdown-body wmm-catalogue"
+          dangerouslySetInnerHTML={{ __html: postData.tocHtml }}
+        />
+      }
+    >
       <Head>
         <title>{postData.title}</title>
       </Head>
-      <article className="bg-white relative">
-        <h1 className="font-bold text-2xl text-center">
+      <article className="bg-white px-6 pb-6 rounded-lg relative">
+        <h1 className="font-bold py-5 text-2xl text-center">
           {postData.title}
-          {/*<span className="text-xs text-gray-400 text-nowrap">{postData.remark}</span>*/}
         </h1>
         <ArchiveTag propClass="absolute top-[20px] right-[20px] rotate-10">
           {postData.tag}
@@ -48,7 +49,7 @@ export default function Post({ postData }) {
       </article>
       <Gitalk />
       <CopyButton />
-    </Layout2>
+    </PostsLayout>
   );
 }
 

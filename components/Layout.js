@@ -39,7 +39,7 @@ const NavLink = ({ href, children }) => {
   );
 };
 
-export default function Layout({ children, home }) {
+export default function Layout({ children }) {
   return (
     <div className="wmm-container">
       <Head>

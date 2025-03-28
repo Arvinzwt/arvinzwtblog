@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { siteTitle } from "../../components/Layout";
-import Layout2 from "../../components/Layout2";
+import PostsLayout from "../../components/PostsLayout";
 import { getSortedPostsData, getSortedTagData } from "../../lib/posts";
 import Link from "next/link";
 import { ArchiveTag } from "../../components/ArchiveTag";
@@ -50,8 +50,8 @@ export default function Posts({ allPostsData, allTagData }) {
   }
 
   return (
-    <Layout2
-      home
+    <PostsLayout
+      propsClass="bg-white px-3"
       sidebarContent={
         <div>
           <div className="mb-2">
@@ -126,7 +126,7 @@ export default function Posts({ allPostsData, allTagData }) {
           <li className="text-center text-gray-500 py-4">没有找到相关数据</li>
         )}
       </ul>
-    </Layout2>
+    </PostsLayout>
   );
 }
 
