@@ -37,6 +37,10 @@ export default function Post({ postData }) {
           </span>
         </div>
         <div
+          className="markdown-body border border-solid border-green-500"
+          dangerouslySetInnerHTML={{ __html: postData.tocHtml }}
+        />
+        <div
           className="markdown-body"
           dangerouslySetInnerHTML={{ __html: postData.contentHtml }}
         />
