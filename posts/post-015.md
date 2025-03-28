@@ -7,7 +7,6 @@ description: ""
 
 ## 目录
 
-
 回顾一下上篇：[ # 03. WEBGL2学习笔记：平移、旋转、缩放](https://juejin.cn/user/2102689080284888)
 
 源码：[03_translateAndRotate](https://gitee.com/arvinzwt/webgl2-test/blob/master/03_translateAndRotate.html)
@@ -142,6 +141,3 @@ main();
 ```
 
 运行，出现界面如下：
-
-
-
