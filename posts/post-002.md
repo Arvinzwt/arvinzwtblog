@@ -1,6 +1,6 @@
 ---
 title: "nuxtjs/auth的简单运用"
-date: "2022-10-10"
+date: "2020-09-25"
 tag: "Nuxt"
 description: "nuxtjs/auth模块的简单运用"
 ---
@@ -11,23 +11,25 @@ description: "nuxtjs/auth模块的简单运用"
 
 打开命令行，输入：
 
-```
+```bash
 npm install @nuxtjs/auth @nuxtjs/axios
 ```
 
 安装完成后，找到根目录下的 nuxt.config.js 编辑
 
-```
-modules: [
-  '@nuxtjs/axios',
-  '@nuxtjs/auth'
-],
-auth: {
-  // Options
+```js
+{
+  modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/auth'
+  ],
+  auth: {
+    // Options
+  }
 }
 ```
 
-这样就等于启用改模块啦，
+这样就启用了
 
 ### 2.监听页面
 
@@ -37,33 +39,29 @@ auth: {
 
 单页面监听的话，只需要在该页面添加属性
 
-```
+```js
 export default {
-  middleware: 'auth'
-}
+  middleware: "auth",
+};
 ```
-
-就可以啦，
 
 #### 2.2.全局监听
 
-全局监听的话，不需要在单页面添加属性了，在路由上做一个中间件就行，在nuxt.config.js编辑
+单页面在部分情况下比较麻烦，可以选用全局监听：在路由上做一个中间件，在nuxt.config.js编辑
 
-```
+```js
 router: {
-  middleware: ['auth']
+  middleware: ["auth"];
 }
 ```
 
-auth是插件自带的，不需要自己去middleware自己再添加奥。同时，如果全局监听，想要忽略个别页面，可以将想要忽略的页面上添加属性
+auth是插件自带的，不需要自己去middleware自己再添加。同时，如果全局监听，想要忽略个别页面，可以将想要忽略的页面上添加属性
 
-```
+```js
 export default {
-  auth: false
-}
+  auth: false,
+};
 ```
-
-就不会监听改页面啦，
 
 ### 3.添加登录方案
 
@@ -73,7 +71,7 @@ export default {
 
 在nuxt.config.js 编辑
 
-```
+```js
 auth: {
    strategies: {
       local: {
@@ -89,121 +87,111 @@ auth: {
 
 strategies里面就是放的方案，local是指本地方案，endpoints是指方案里面的每个端点，url是指方案请求的后端地址，method请求方式，propertyName可以用于指定将响应JSON的哪个字段用作值，也就是说，上面三个接口返回的数据结构应该为
 
-```
-http://www.api.com/api/auth/login
+```js
+//www.api.com/api/auth/login
 
-{
-    token: "i8@39hqzG@A5Ax9d5yQ5ayF#N^^jR$3jpi$rVEh6ZAAd"
+http: {
+  token: "i8@39hqzG@A5Ax9d5yQ5ayF#N^^jR$3jpi$rVEh6ZAAd";
 }
 ```
 
-```
-http://www.api.com/api/auth/logout
-{
-    ...
+```js
+//www.api.com/api/auth/logout
+http: {
+  status: true;
 }
 ```
 
-```
-http://www.api.com/api/auth/user
+```js
+//www.api.com/api/auth/user
 
-{
-    user:{name:'张三'}
+http: {
+  user: {
+    name: "张三";
+  }
 }
 ```
 
 然后在页面里面新建pages/login.vue,写入
 
-```
+```html
 <template>
+  <div>
     <div>
-        <div>
-            <input type="text" v-model="login.nam">
-            <input type="text" v-model="login.pas">
-            <button @click="loginFn">login</button>
-        </div>
+      <input type="text" v-model="login.nam" />
+      <input type="text" v-model="login.pas" />
+      <button @click="loginFn">login</button>
     </div>
+  </div>
 </template>
 
 <script>
-export default {
+  export default {
     name: "login",
     data() {
-        return {
-            login: {
-                nam: '',
-                pas: '',
-            }
-        }
+      return {
+        login: {
+          nam: "",
+          pas: "",
+        },
+      };
     },
-    created() {
-    },
-    mounted() {
-    },
-    destroyed() {
-    },
+    created() {},
+    mounted() {},
+    destroyed() {},
     methods: {
-        loginFn() {
-            this.$auth.loginWith('local', this.login).then(res=>{
-                this.$router.push('/home')
-            })
-        }
-    }
-}
+      loginFn() {
+        this.$auth.loginWith("local", this.login).then((res) => {
+          this.$router.push("/home");
+        });
+      },
+    },
+  };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
 ```
 
 新建pages/home.vue,写入
 
-```
+```html
 <template>
-    <div>
-        <div>
-            用户信息：{{$auth.user}}
-        </div>
-        <div>
-            是否登录：{{$auth.loggedIn}}
-        </div>
-        <button @click="loginOut">登出</button>
-    </div>
+  <div>
+    <div>用户信息：{{$auth.user}}</div>
+    <div>是否登录：{{$auth.loggedIn}}</div>
+    <button @click="loginOut">登出</button>
+  </div>
 </template>
 
 <script>
-export default {
+  export default {
     components: {},
     methods: {
-        loginOut() {
-            this.$auth.logout().then(res=>{
-                this.$router.push('/login')
-            })
-        }
-    }
-}
+      loginOut() {
+        this.$auth.logout().then((res) => {
+          this.$router.push("/login");
+        });
+      },
+    },
+  };
 </script>
 
-<style>
-
-</style>
-
+<style></style>
 ```
 
 然后重新启动nuxt
 
-```
+```bash
 npm run dev
 ```
 
-就可以看到auth模块生效啦！
+就可以看到auth模块已经生效
 
 #### 3.2.自定义
 
 首先要在nuxt.config.js修改
 
-```
+```js
 build: {
   transpile: ['@nuxtjs/auth']
 },
@@ -223,71 +211,69 @@ auth: {
 
 然后在根目录中新建文件夹schemes和添加文件customScheme.js并写入
 
-```
-import LocalScheme from '@nuxtjs/auth/lib/schemes/local'
+```js
+import LocalScheme from "@nuxtjs/auth/lib/schemes/local";
 
 //继承local方案
 export default class CustomScheme extends LocalScheme {
-    async login(endpoint){//覆盖登录接口
-        console.log('login',endpoint)
-        return endpoint
-    }
+  async login(endpoint) {
+    //覆盖登录接口
+    console.log("login", endpoint);
+    return endpoint;
+  }
 
-    async logout(endpoint){//覆盖登出接口
-        console.log('logout',endpoint)
-        return endpoint
-    }
+  async logout(endpoint) {
+    //覆盖登出接口
+    console.log("logout", endpoint);
+    return endpoint;
+  }
 
-    async user(endpoint){//覆盖user接口
-        console.log('user',endpoint)
-        return endpoint
-    }
+  async user(endpoint) {
+    //覆盖user接口
+    console.log("user", endpoint);
+    return endpoint;
+  }
 }
 ```
 
 修改pages/login.vue页面
 
-```
+```html
 <template>
+  <div>
     <div>
-        <div>
-            <input type="text" v-model="login.nam">
-            <input type="text" v-model="login.pas">
-            <button @click="loginFn">login</button>
-        </div>
+      <input type="text" v-model="login.nam" />
+      <input type="text" v-model="login.pas" />
+      <button @click="loginFn">login</button>
     </div>
+  </div>
 </template>
 
 <script>
-export default {
+  export default {
     name: "login",
     data() {
-        return {
-            login: {
-                nam: '',
-                pas: '',
-            }
-        }
+      return {
+        login: {
+          nam: "",
+          pas: "",
+        },
+      };
     },
-    created() {
-    },
-    mounted() {
-    },
-    destroyed() {
-    },
+    created() {},
+    mounted() {},
+    destroyed() {},
     methods: {
-        loginFn() {
-            this.$auth.loginWith('customStrategy', this.login).then(res=>{
-                this.$router.push('/home')
-            })
-        }
-    }
-}
+      loginFn() {
+        this.$auth.loginWith("customStrategy", this.login).then((res) => {
+          this.$router.push("/home");
+        });
+      },
+    },
+  };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
 ```
 
-然后就是你自定义的方法啦
+到此，即已完成

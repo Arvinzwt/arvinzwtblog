@@ -92,3 +92,13 @@ body {
     padding-bottom: 10px;
   }
 }
+
+.wmm-post-body.markdown-body .highlight pre,
+.wmm-post-body.markdown-body pre {
+  padding: 0;
+}
+
+.wmm-post-body ul,
+.wmm-post-body ol {
+  list-style: circle;
+}

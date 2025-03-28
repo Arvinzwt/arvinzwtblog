@@ -782,3 +782,8 @@ gl.drawArrays(gl.TRIANGLES, 3, 3)
 ## 参考文档
 
 https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-fundamentals.html#toc
+
+---
+
+上一篇：[01. WEBGL2学习-点、线、三角形](/posts/post-010)
+下一篇：[01. WEBGL2学习-点、线、三角形](/posts/post-012)

@@ -32,7 +32,7 @@ export default function Post({ postData }) {
             "text-sm",
             "font-semibold",
             "bg-[#f7f8fb]",
-            { "p-5 m-5": postData.description },
+            { "p-5 my-5": postData.description },
           ])}
         >
           {postData.description}
@@ -43,7 +43,7 @@ export default function Post({ postData }) {
           </span>
         </div>
         <div
-          className="markdown-body"
+          className="markdown-body wmm-post-body"
           dangerouslySetInnerHTML={{ __html: postData.contentHtml }}
         />
       </article>
