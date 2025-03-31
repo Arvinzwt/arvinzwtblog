@@ -17,9 +17,9 @@ export function Gitalk({ children, propClass = "" }) {
   return (
     <GitalkComponent
       options={{
-        clientID: "c656259abe587f9b494f",
-        clientSecret: "8d7017bad1009e4c80c6e1c696a3bdb2a7133ab7",
-        repo: "Arvinzwt.github.io",
+        clientID: "Ov23liVpmCIjLpYWX0zP",
+        clientSecret: "0eeaaab3d6a4bc82843c28b2e25e5167b7857626",
+        repo: "arvinzwtblog",
         owner: "Arvinzwt",
         admin: ["Arvinzwt"],
         id: id, // 直接使用id
