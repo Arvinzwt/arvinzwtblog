@@ -24,13 +24,16 @@ const VERTEX_SHADER_SOURCE = `#version 300 es
     vec2 clipSpace = zeroToTwo - 1.0;
     gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
   }
-`
+`;
 ```
 
 - 读取新加的`u_translation`属性位置
 
 ```js
-const translationLocation = gl.getUniformLocation(shaderProgram, 'u_translation');
+const translationLocation = gl.getUniformLocation(
+  shaderProgram,
+  "u_translation",
+);
 ```
 
 - 调整变量，传递给顶点着色器
@@ -78,7 +81,7 @@ const VERTEX_SHADER_SOURCE = `#version 300 es
 
     gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
   }
-`
+`;
 ```
 
 - 获取缩放和旋转的位置属性
