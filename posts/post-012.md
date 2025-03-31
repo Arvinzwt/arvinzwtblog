@@ -5,13 +5,13 @@ tag: "WebGL2"
 description: ""
 ---
 
-回顾一下，上篇我们讲了如何绘制点、线、三角形，源码：[01_pointAndLine.html](https://gitee.com/arvinzwt/webgl2-test/blob/master/01_pointAndLine.html)
 
 现在我们做一点调整，通过片段着色器变量传参，来修改颜色
 
+## 调整片段着色器
 - 修改片段着色器属性，添加全局变量
 
-```
+```js
 const FRAGMENT_SHADER_SOURCE = `#version 300 es
   precision highp float;
   uniform vec4 u_color; // 定义一个4维变量u_color，uniform：全局变量
@@ -24,13 +24,13 @@ const FRAGMENT_SHADER_SOURCE = `#version 300 es
 
 - 读取该变量在片段着色器的位置
 
-```
+```js
 const colorLocation = gl.getUniformLocation(shaderProgram, 'u_color');
 ```
 
 - 在绘制过程中，向片段着色器传递变量
 
-```
+```js
 gl.uniform4fv(colorLocation, [
   Math.random(),
   Math.random(),
@@ -41,7 +41,7 @@ gl.uniform4fv(colorLocation, [
 
 整体代码如下：
 
-```
+```html
 <!DOCTYPE html>
 <html lang='en'>
 <head>
@@ -228,9 +228,10 @@ gl.uniform4fv(colorLocation, [
 
 刷新页面，可看到颜色已经随机改变
 
+## 调整canvas的大小
 - 而实际应用中，canvas的大小一般是根据页面大小动态变化的，而style设置的宽高和属性栏的宽高不一致时，canvas往往会变形扭曲，我们可以在渲染时添加以下处理：
 
-```
+```js
   function resizeCanvasToDisplaySize(canvas, multiplier) {
     multiplier = multiplier || 1;
     const width  = canvas.clientWidth  * multiplier | 0;
@@ -243,14 +244,14 @@ gl.uniform4fv(colorLocation, [
     return false;
   }
 ```
-
+## 添加工具
 我们添加一个`webgl2fundamentals`官方提供的，学习用的小工具处理
 源码:[webgl-utils](https://webgl2fundamentals.org/webgl/resources/webgl-utils.js)
 
 - 当前的空间坐标为-1～1，与我们前端常用的像素差异有点多，可以通过调整`gl_Position`属性来将顶点坐标从屏幕坐标系转换到裁剪空间坐标系
 - - 调整顶点编辑器的如下
 
-```
+```js
 const VERTEX_SHADER_SOURCE = `#version 300 es
   in vec2 a_position; // 输入顶点坐标
   uniform vec2 u_resolution;  // uniform 变量，表示渲染目标的分辨率（宽度和高度）。通常，这些坐标是相对于当前渲染目标（如画布）的坐标
@@ -273,19 +274,19 @@ const VERTEX_SHADER_SOURCE = `#version 300 es
 
 - - 获取`u_resolution`的位置属性
 
-```
+```js
 const resolutionUniformLocation = gl.getUniformLocation(shaderProgram, 'u_resolution');
 ```
 
 - - 将数据同步到gpu
 
-```
+```js
 gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 ```
 
 - - 坐标系已经发生变化，调整图像坐标大小
 
-```
+```js
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
   // 点的顶点数据
   10.0, 10.0,
@@ -318,10 +319,14 @@ gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
 
 最终效果如下：
 
-![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/81c9a78305de482e859df68ec4b215a9~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=219&h=325&s=4099&e=png&b=ffffff)
-
-- 下一篇章：[03. WEBGL2学习笔记：平移、旋转、缩放](https://juejin.cn/post/7387693427373113355)
+![image.png](/images/posts/012-01.png)
 
 ### 参考文献：
 
 https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-fundamentals.html#toc
+
+---
+
+上一篇：[WEBGL2学习笔记02：点、线、三角形](/posts/post-011)
+
+下一篇：[WEBGL2学习笔记04：平移、旋转、缩放](/posts/post-013)

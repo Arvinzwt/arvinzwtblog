@@ -7,9 +7,10 @@ description: ""
 
 我们来做一个最简单的webgl2图形
 
-#### 1. 新建一个canvas
+## 图形绘制
+### 新建一个canvas
 
-```
+```html
 <canvas id='glCanvas' width='300' height='300'></canvas>
 ```
 
@@ -26,9 +27,9 @@ function main() {
 main();
 ```
 
-#### 2. 编写一段顶点着色器源码：
+### 编写一段顶点着色器
 
-```
+```js
 const VERTEX_SHADER_SOURCE = `#version 300 es
   void main() {
     gl_Position = vec4(0, 0, 0, 1);
@@ -44,7 +45,7 @@ const VERTEX_SHADER_SOURCE = `#version 300 es
 
 - `gl_PointSize`内置变量，控制点的大小
 
-#### 3. 编写一段片元着色器源码：
+### 编写片元着色器
 
 ```
 const FRAGMENT_SHADER_SOURCE = `#version 300 es
@@ -60,9 +61,9 @@ const FRAGMENT_SHADER_SOURCE = `#version 300 es
 - `out vec4 a_color;`：输出一个4维变量（rgba）,在片元着色器中，`out` 关键字表示这个变量将会被传递到后续的渲染阶段（如帧缓冲区）。
 - `a_color = vec4(0, 0, 0, 1); `: 设定a_color的值为vec4(red, green, blue, alpha)
 
-#### 4. 创建着色器程序
+### 创建着色器
 
-```
+```js
 // 编译顶点着色器
 const vertexShader = gl.createShader(gl.VERTEX_SHADER);//创建一个类型为顶点着色器的的着色器
 gl.shaderSource(vertexShader, VERTEX_SHADER_SOURCE);//设置着色器的源代码。
@@ -80,11 +81,11 @@ gl.attachShader(shaderProgram, fragmentShader)
 gl.linkProgram(shaderProgram); //将顶点着色器和片元着色器组合成一个可执行的程序对象
 ```
 
-#### 5.封装
+### 封装
 
 **创建着色器程序**这个过程在99% 的 WbgGL 应用中是一样的，所以我们常封装为一个函数
 
-```
+```js
 /**
  * @desc 加载着色器对象
  * @param gl
@@ -139,9 +140,9 @@ function initShaderProgram(gl, vsSource, fsSource) {
 }
 ```
 
-#### 6. 绘制
+### 绘制
 
-```
+```js
 gl.useProgram(shaderProgram)//激活程序对象
 
 gl.drawArrays(gl.POINTS, 0, 1);//绘制图形
@@ -165,7 +166,7 @@ gl.drawArrays(mode, first, count); 其中各参数的含义如下：
 
 对应所有代码如下：
 
-```
+```html
 <!DOCTYPE html>
 <html lang='en'>
 <head>
@@ -275,15 +276,15 @@ gl.drawArrays(mode, first, count); 其中各参数的含义如下：
 </html>
 ```
 
-![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b03a1b0dc9464c13b464fdae8423b413~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=327&h=340&s=3551&e=png&b=ffffff)
+![image.png](/images/posts/011-01.png)
 
-#### 6. 移动点的位置
+### 移动点的位置
 
 我们做点调整，可以自定义点的位置
 
 - 既然要从外部变量改变点的位置，我们首先定一个变量到顶点着色器中，通过变量来调整坐标
 
-```
+```js
 const VERTEX_SHADER_SOURCE = `#version 300 es
   in vec2 a_position; //输入一个二维变量a_position；
   void main() {
@@ -295,7 +296,7 @@ const VERTEX_SHADER_SOURCE = `#version 300 es
 
 - 创建一个缓冲区，来存放我们想要调整的数据
 
-```
+```js
 //使用`bufferData`将我们要调整的坐标数据传输到`vertexBuffer`缓冲区中，数据类型为`Float32Array`，并指定了使用模式为`gl.STATIC_DRAW`，表示数据不会频繁改变。
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
   // 线条的顶点数据
@@ -314,7 +315,7 @@ gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
 
 - 将我们存储在缓冲区的属性和顶点数组绑定
 
-```
+```js
 // 获取a_position位置属性
 const positionAttributeLocation = gl.getAttribLocation(shaderProgram, 'a_position')
 
@@ -339,7 +340,7 @@ gl.enableVertexAttribArray(positionAttributeLocation)
 
 - 渲染
 
-```
+```js
 drawScene()
 
 function drawScene() {
@@ -367,7 +368,7 @@ function drawScene() {
 
 - 整体代码如下
 
-```
+```html
 <!DOCTYPE html>
 <html lang='en'>
 <head>
@@ -542,15 +543,15 @@ function drawScene() {
 
 打开html，可以看到点的位置已经发生改变
 
-![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a49607bedf00466f909e912fe6b4869d~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=317&h=316&s=2948&e=png&b=ffffff)
+![image.png](/images/posts/011-02.png)
 
-#### 7. 绘制线条和三角形
+绘制线条和三角形
 
 我们做点调整绘制一下线条和三角形
 
 - 在执行`bufferData`的操作中，添加线的坐标，和三角形的坐标
 
-```
+```js
 //使用`bufferData`将我们要调整的坐标数据传输到`vertexBuffer`缓冲区中，数据类型为`Float32Array`，并指定了使用模式为`gl.STATIC_DRAW`，表示数据不会频繁改变。
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
 
@@ -570,7 +571,7 @@ gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
 
 - 在渲染的地方添加渲染线条和三角形的处理
 
-```
+```js
 // 绘制线条
 gl.drawArrays(gl.LINES, 1, 2)
 
@@ -580,7 +581,7 @@ gl.drawArrays(gl.TRIANGLES, 3, 3)
 
 整体代码如下
 
-```
+```html
 <!DOCTYPE html>
 <html lang='en'>
 <head>
@@ -755,19 +756,19 @@ gl.drawArrays(gl.TRIANGLES, 3, 3)
 
 - 刷新页面，即可看到
 
-![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e0d152b0eacc429fb5736a259223ccc7~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=332&h=326&s=4262&e=png&b=ffffff)
+![image.png](/images/posts/011-03.png)
 
 - 这篇我们讲了通过修改顶点着色器来修改位置和绘制点线面，接下来我们看看如何修改片段着色器来调整颜色[02. WEBGL2学习2: 颜色配置](url)
 
 ## 附录
 
-#### 空间向量(x、y、z、w):
+-- 空间向量(x、y、z、w):
 
 1. X 和 Y 坐标范围从 -1 到 1，表示屏幕的水平和垂直范围;
 2. Z 坐标范围从 0 到 1，表示深度信息，用于深度测试和裁剪。
 3. W 坐标通常是 1.0，用于透视除法。
 
-#### 坐标空间转换
+-- 坐标空间转换
 
 1.  **模型空间（Model Space）** ：顶点的原始坐标，通常是对象的局部坐标系。
 1.  **世界空间（World Space）** ：通过模型变换将模型空间坐标转换到世界坐标系中。
@@ -775,9 +776,9 @@ gl.drawArrays(gl.TRIANGLES, 3, 3)
 1.  **裁剪空间（Clip Space）** ：通过投影变换将视图空间坐标转换为规范化的坐标空间，即 `[-1, 1]` 范围内的坐标。
 1.  **屏幕空间（Screen Space 或 Window Space）** ：通过视口变换将裁剪空间坐标映射到屏幕的像素坐标系。
 
-#### 浏览器支持情况：
+-- 浏览器支持情况：
 
-![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/57d8b42ed81a4a43961b8a924d34d1d2~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1136&h=350&s=83950&e=png&b=ede2cd)
+![image.png](/images/posts/011-04.png)
 
 ## 参考文档
 
@@ -785,5 +786,5 @@ https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-fundamentals.html#toc
 
 ---
 
-上一篇：[01. WEBGL2学习-点、线、三角形](/posts/post-010)
-下一篇：[01. WEBGL2学习-点、线、三角形](/posts/post-012)
+上一篇：[WEBGL2学习笔记01：基础概念](/posts/post-010)
+下一篇：[WEBGL2学习笔记03：颜色配置和重置画布](/posts/post-012)

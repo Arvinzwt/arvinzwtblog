@@ -5,10 +5,6 @@ tag: "WebGL2"
 description: ""
 ---
 
-回顾一下上篇：[# 02. WEBGL2学习笔记: 颜色配置和重置画布](https://juejin.cn/post/7387316089159499817)
-
-源码：[02_colorAndWidth](https://gitee.com/arvinzwt/webgl2-test/blob/master/02_colorAndWidth.html)
-
 ### 1.平移
 
 我们在此基础上做点调整使之往下平移100px。
@@ -17,7 +13,7 @@ description: ""
 - - 新加一个`u_translation`属性，用来传输平移的坐标，并
 - - 把`zeroToOne`的值调整为`( a_position + u_translation ) / u_resolution;`，从而可以把平移坐标传递给`gl_Position`。
 
-```
+```js
 const VERTEX_SHADER_SOURCE = `#version 300 es
   in vec2 a_position;
   uniform vec2 u_resolution;
@@ -33,20 +29,20 @@ const VERTEX_SHADER_SOURCE = `#version 300 es
 
 - 读取新加的`u_translation`属性位置
 
-```
+```js
 const translationLocation = gl.getUniformLocation(shaderProgram, 'u_translation');
 ```
 
 - 调整变量，传递给顶点着色器
 
-```
+```js
 const translation = [0, 100];
 gl.uniform2fv(translationLocation, translation);
 ```
 
 最终效果如下：
 
-![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0ff36cb9a78146d3809e8dd642d0a584~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=237&h=333&s=5137&e=png&b=ffffff)
+![image.png](/images/posts/013-01.png)
 
 ### 2.旋转、缩放
 
@@ -60,7 +56,7 @@ gl.uniform2fv(translationLocation, translation);
 scaledPosition.x * u_rotation.y + scaledPosition.y * u_rotation.x,
 scaledPosition.y * u_rotation.y - scaledPosition.x * u_rotation.x);`：最终旋转的角度由于缩放比例、位置坐标、旋转角度决定；
 
-```
+```js
 const VERTEX_SHADER_SOURCE = `#version 300 es
   in vec2 a_position;
   uniform vec2 u_resolution;
@@ -87,21 +83,21 @@ const VERTEX_SHADER_SOURCE = `#version 300 es
 
 - 获取缩放和旋转的位置属性
 
-```
+```js
 const rotationLocation = gl.getUniformLocation(shaderProgram, "u_rotation");
 const scaleLocation = gl.getUniformLocation(shaderProgram, "u_scale");
 ```
 
 - 渲染
 
-```
+```js
 gl.uniform2fv(rotationLocation, [0, 1]);
 gl.uniform2fv(scaleLocation, [0.5, 0.5]);
 ```
 
 - 最终效果如下：
 
-![image.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/056af6f5155b46b8be226b0da6c29b5f~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=221&h=317&s=3893&e=png&b=ffffff)
+![image.png](/images/posts/013-02.png)
 
 - 最终代码：[03_translateAndRotate.](https://gitee.com/arvinzwt/webgl2-test/blob/master/03_translateAndRotate.html)
 - 下一篇：04. WEBGL2学习笔记：矩阵和动画
@@ -109,3 +105,8 @@ gl.uniform2fv(scaleLocation, [0.5, 0.5]);
 ### 参考文献
 
 https://webgl2fundamentals.org/webgl/lessons/zh_cn/webgl-2d-matrices.html
+
+---
+
+上一篇：[WEBGL2学习笔记03：颜色配置和重置画布](/posts/post-012)
+下一篇：[WEBGL2学习笔记05：动画、二维矩阵](/posts/post-014)
