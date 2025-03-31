@@ -24,6 +24,6 @@ Matter.Detector：检测碰撞和交互。
 
 ---
 
-上一篇：[MATTER笔记02：核心模块](/posts/post-016)
+上一篇：[MATTER笔记02：安装](/posts/post-016)
 
 下一篇：[MATTER笔记04：渲染与调试](/posts/post-018)
