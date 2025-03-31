@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "format": "prettier --write ./",
-    "reset": "sh reset.sh"
+    "publish": "sh publish.sh"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.0.17",
