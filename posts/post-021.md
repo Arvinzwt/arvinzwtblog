@@ -1,11 +1,15 @@
 ---
-title: "MATTER笔记07：特殊效果"
+title: "MATTER笔记07：API 参考"
 date: "2025-04-06"
 tag: "matter.js"
 description: "一个用于网页的2D刚体物理引擎"
 ---
 
+## Events
 
+## Sleeping
+
+## Metrics
 
 ### 参考文献
 
@@ -14,5 +18,4 @@ description: "一个用于网页的2D刚体物理引擎"
 
 ---
 
-上一篇：[MATTER笔记06：工具模块](/posts/post-020)
-
+上一篇：[MATTER笔记06：性能与优化](/posts/post-020)

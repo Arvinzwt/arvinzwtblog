@@ -80,7 +80,8 @@ body {
 .wmm-catalogue.markdown-body {
   padding-bottom: 10px;
 
-  ul, ol {
+  ul,
+  ol {
     list-style: lower-roman;
   }
 
@@ -90,8 +91,6 @@ body {
     margin: 0;
     list-style: none;
   }
-
-
 
   h4 {
     border-bottom: 1px solid #eaecef;

@@ -1,11 +1,15 @@
 ---
-title: "MATTER笔记04：交互与渲染"
+title: "MATTER笔记04：渲染与调试"
 date: "2025-04-03"
 tag: "matter.js"
 description: "一个用于网页的2D刚体物理引擎"
 ---
 
+## MouseConstraint
 
+## Render
+
+## Runner
 
 ### 参考文献
 
@@ -14,9 +18,6 @@ description: "一个用于网页的2D刚体物理引擎"
 
 ---
 
-上一篇：[MATTER笔记03：组合与约束](/posts/post-017)
+上一篇：[MATTER笔记03：主要模块](/posts/post-017)
 
-
-下一篇：[MATTER笔记05：碰撞检测](/posts/post-019)
-
-
+下一篇：[MATTER笔记05：工具与插件](/posts/post-019)

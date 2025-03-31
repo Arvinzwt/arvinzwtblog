@@ -1,5 +1,5 @@
-import {useEffect, useRef} from 'react';
-import Matter from 'matter-js';
+import { useEffect, useRef } from "react";
+import Matter from "matter-js";
 
 export default function Clock() {
   const canvasRef = useRef(null);
@@ -8,22 +8,15 @@ export default function Clock() {
 
   useEffect(() => {
     // 只在客户端执行
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     // 解构 Matter 模块
-    const {
-      Engine,
-      Render,
-      World,
-      Bodies,
-      Runner,
-      Mouse,
-      MouseConstraint
-    } = Matter;
+    const { Engine, Render, World, Bodies, Runner, Mouse, MouseConstraint } =
+      Matter;
 
     // 创建物理引擎
     const engine = Engine.create({
-      gravity: {x: 0, y: 1} // 设置重力方向 (y轴向下)
+      gravity: { x: 0, y: 1 }, // 设置重力方向 (y轴向下)
     });
     engineRef.current = engine;
 
@@ -39,19 +32,30 @@ export default function Clock() {
         width: 800,
         height: 600,
         wireframes: false, // 非线框模式
-        background: '#f0f0f0'
-      }
+        background: "#f0f0f0",
+      },
     });
 
     // 创建边界墙
-    const wallOptions = {isStatic: true, render: {fillStyle: '#333333'}};
+    const wallOptions = { isStatic: true, render: { fillStyle: "#333333" } };
     const ground = Bodies.rectangle(400, 610, 810, 60, wallOptions);
     const leftWall = Bodies.rectangle(-30, 300, 60, 600, wallOptions);
     const rightWall = Bodies.rectangle(830, 300, 60, 600, wallOptions);
 
     // 创建随机小球
     const balls = [];
-    const colors = ['#FF5252', '#FF4081', '#E040FB', '#7C4DFF', '#536DFE', '#448AFF', '#40C4FF', '#18FFFF', '#64FFDA', '#69F0AE'];
+    const colors = [
+      "#FF5252",
+      "#FF4081",
+      "#E040FB",
+      "#7C4DFF",
+      "#536DFE",
+      "#448AFF",
+      "#40C4FF",
+      "#18FFFF",
+      "#64FFDA",
+      "#69F0AE",
+    ];
 
     for (let i = 0; i < 15; i++) {
       const radius = Math.random() * 20 + 10;
@@ -64,10 +68,10 @@ export default function Clock() {
             restitution: 0.8, // 弹性系数
             friction: 0.005,
             render: {
-              fillStyle: colors[Math.floor(Math.random() * colors.length)]
-            }
-          }
-        )
+              fillStyle: colors[Math.floor(Math.random() * colors.length)],
+            },
+          },
+        ),
       );
     }
 
@@ -78,9 +82,9 @@ export default function Clock() {
       constraint: {
         stiffness: 0.2,
         render: {
-          visible: false
-        }
-      }
+          visible: false,
+        },
+      },
     });
 
     // 将所有元素添加到世界
@@ -89,7 +93,7 @@ export default function Clock() {
       leftWall,
       rightWall,
       ...balls,
-      mouseConstraint
+      mouseConstraint,
     ]);
 
     // 启动渲染和运行器
@@ -112,9 +116,9 @@ export default function Clock() {
       <canvas
         ref={canvasRef}
         style={{
-          width: '100%',
-          borderRadius: '8px',
-          boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+          width: "100%",
+          borderRadius: "8px",
+          boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
         }}
       />
     </div>
