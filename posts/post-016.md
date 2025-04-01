@@ -50,7 +50,7 @@ npm install matter-js
   <body>
     <div id="app"></div>
     <!-- 引入 Matter.js 物理引擎库 -->
-    <script src="./public/lib/matter.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/matter-js/0.20.0/matter.js"></script>
     <script>
       // 模块别名（简化调用）
       var Engine = Matter.Engine, // 物理引擎核心模块
@@ -129,4 +129,4 @@ npm install matter-js
 
 上一篇：[MATTER笔记01：基础概念](/posts/post-015)
 
-下一篇：[MATTER笔记03：主要模块](/posts/post-017)
+下一篇：[MATTER笔记03：核心控制](/posts/post-017)

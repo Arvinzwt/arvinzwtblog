@@ -1,15 +1,89 @@
 ---
-title: "MATTER笔记07：API 参考"
+title: "MATTER笔记07：工具与扩展组"
 date: "2025-04-06"
 tag: "matter.js"
 description: "一个用于网页的2D刚体物理引擎"
 ---
 
-## Events
+### 说明
 
-## Sleeping
+### [工具与扩展组](/posts/post-021)
 
-## Metrics
+| 模块名称 | 说明     | 描述                                                         |
+| -------- | -------- | ------------------------------------------------------------ |
+| Common   | 通用工具 | 提供共享的工具函数（如随机数生成、深度克隆等）。             |
+| Plugin   | 插件系统 | 允许扩展引擎功能（需手动注册，如自定义碰撞检测或物理行为）。 |
+
+#### 基础案例
+
+我们新建一个最小示例
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matter.js 物理引擎示例</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <!-- 引入 Matter.js 物理引擎库 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/matter-js/0.20.0/matter.js"></script>
+    <script>
+      // 模块别名（简化调用）
+      var Engine = Matter.Engine, // 物理引擎核心模块
+        Render = Matter.Render, // 渲染模块（用于可视化调试）
+        Runner = Matter.Runner, // 运行控制模块
+        Bodies = Matter.Bodies, // 刚体创建模块
+        Composite = Matter.Composite; // 复合物体/世界管理模块
+
+      // 1. 创建物理引擎实例
+      // - 会自动创建一个空的物理世界 (engine.world)
+      var engine = Engine.create();
+
+      // 2. 创建渲染器（用于可视化调试）
+      // - element: 指定渲染画布挂载的DOM元素
+      // - engine:  绑定到哪个物理引擎
+      var render = Render.create({
+        element: document.body, // 渲染到页面body中
+        engine: engine, // 绑定刚创建的引擎
+        options: {
+          wireframes: true, // 线框模式（调试时更清晰）
+        },
+      });
+
+      // 3. 创建物理实体
+      // - 矩形刚体参数：(x坐标, y坐标, 宽度, 高度, [选项])
+      var boxA = Bodies.rectangle(400, 200, 80, 80, {
+        restitution: 0.8, // 弹性系数（0-1）
+      });
+      var boxB = Bodies.rectangle(450, 50, 80, 80, {
+        angle: Math.PI / 4, // 初始旋转角度（弧度）
+      });
+      // 静态地面（isStatic: true 表示不受重力影响）
+      var ground = Bodies.rectangle(400, 610, 810, 60, {
+        isStatic: true, // 设为静态物体
+      });
+
+      // 4. 将所有刚体添加到物理世界
+      Composite.add(engine.world, [boxA, boxB, ground]);
+
+      // 5. 启动渲染器（开始绘制物理世界）
+      Render.run(render);
+
+      // 6. 创建运行控制器
+      var runner = Runner.create({
+        fps: 60, // 可选：限制帧率
+      });
+
+      // 7. 启动物理引擎（开始模拟）
+      // - 会自动按帧更新物理世界状态
+      Runner.run(runner, engine);
+    </script>
+  </body>
+</html>
+```
 
 ### 参考文献
 
@@ -19,4 +93,4 @@ description: "一个用于网页的2D刚体物理引擎"
 
 ---
 
-上一篇：[MATTER笔记06：性能与优化](/posts/post-020)
+上一篇：[MATTER笔记06：可视化与调试组](/posts/post-020)
