@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import {useEffect, useRef} from "react";
 import Matter from "matter-js";
 
 export default function Clock() {
@@ -11,13 +11,61 @@ export default function Clock() {
     if (typeof window === "undefined") return;
 
     // 解构 Matter 模块
-    const { Engine, Render, World, Bodies, Runner, Mouse, MouseConstraint } =
-      Matter;
+    const {
+      Engine,
+      Render,
+      World,
+      Body,
+      Bodies,
+      Runner,
+      Mouse,
+      MouseConstraint,
+      Composites,
+      Composite,
+      Constraint,
+    } = Matter;
+
+    const newtonsCradle = function (xx, yy, number, size, length) {
+
+      const newtonsCradle = Composite.create({label: 'Newtons Cradle'});
+
+      for (var i = 0; i < number; i++) {
+        let separation = 1.9;
+        let circle = Bodies.circle(xx + i * (size * separation), yy + length, size, {
+          inertia: Infinity,
+          restitution: 1,
+          friction: 0,
+          frictionAir: 0,
+          slop: size * 0.02,
+          render: {
+            fillStyle: 'transparent',
+            strokeStyle: '#000',
+            lineWidth: 1
+          }
+        });
+
+        let constraint = Constraint.create({
+          pointA: {x: xx + i * (size * separation), y: yy},
+          bodyB: circle,
+          render: {
+            type: 'line',
+            strokeStyle: '#000000', // 黑色线条
+            lineWidth: 1
+          }
+        });
+
+        Composite.addBody(newtonsCradle, circle);
+        Composite.addConstraint(newtonsCradle, constraint);
+      }
+
+      return newtonsCradle;
+    }
 
     // 创建物理引擎
     const engine = Engine.create({
-      gravity: { x: 0, y: 1 }, // 设置重力方向 (y轴向下)
+      gravity: {x: 0, y: 1}, // 设置重力方向 (y轴向下)
     });
+    const world = engine.world;
     engineRef.current = engine;
 
     // 创建运行器
@@ -31,74 +79,39 @@ export default function Clock() {
       options: {
         width: 800,
         height: 600,
+        showVelocity: true,
         wireframes: false, // 非线框模式
         background: "#f0f0f0",
       },
     });
 
-    // 创建边界墙
-    const wallOptions = { isStatic: true, render: { fillStyle: "#333333" } };
-    const ground = Bodies.rectangle(400, 610, 810, 60, wallOptions);
-    const leftWall = Bodies.rectangle(-30, 300, 60, 600, wallOptions);
-    const rightWall = Bodies.rectangle(830, 300, 60, 600, wallOptions);
+    // 启动渲染和运行器
+    Render.run(render);
+    Runner.run(runner, engine);
 
-    // 创建随机小球
-    const balls = [];
-    const colors = [
-      "#FF5252",
-      "#FF4081",
-      "#E040FB",
-      "#7C4DFF",
-      "#536DFE",
-      "#448AFF",
-      "#40C4FF",
-      "#18FFFF",
-      "#64FFDA",
-      "#69F0AE",
-    ];
+    const cradle = newtonsCradle(280, 100, 5, 30, 200);
+    Composite.add(world, cradle);
+    Body.translate(cradle.bodies[0], {x: -180, y: -100});
 
-    for (let i = 0; i < 15; i++) {
-      const radius = Math.random() * 20 + 10;
-      balls.push(
-        Bodies.circle(
-          Math.random() * 700 + 50, // x位置 (避免靠近边缘)
-          Math.random() * -200 - 50, // 从屏幕上方开始
-          radius,
-          {
-            restitution: 0.8, // 弹性系数
-            friction: 0.005,
-            render: {
-              fillStyle: colors[Math.floor(Math.random() * colors.length)],
-            },
-          },
-        ),
-      );
-    }
-
-    // 添加鼠标交互控制
     const mouse = Mouse.create(render.canvas);
     const mouseConstraint = MouseConstraint.create(engine, {
       mouse: mouse,
       constraint: {
         stiffness: 0.2,
         render: {
-          visible: false,
-        },
-      },
+          visible: false
+        }
+      }
     });
 
-    // 将所有元素添加到世界
-    World.add(engine.world, [
-      ground,
-      leftWall,
-      rightWall,
-      ...balls,
-      mouseConstraint,
-    ]);
+    Composite.add(world, mouseConstraint);
 
-    // 启动渲染和运行器
-    Render.run(render);
-    Runner.run(runner, engine);
+    render.mouse = mouse;
+
+    Render.lookAt(render, {
+      min: {x: 0, y: 50},
+      max: {x: 800, y: 600}
+    });
 
     // 清理函数
     return () => {
