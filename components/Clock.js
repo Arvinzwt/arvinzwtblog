@@ -81,7 +81,7 @@ export default function Clock() {
         height: 600,
         showVelocity: true,
         wireframes: false, // 非线框模式
-        background: "#f0f0f0",
+        background: "transparent",
       },
     });
 
