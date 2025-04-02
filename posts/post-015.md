@@ -1,7 +1,7 @@
 ---
 title: "MATTER笔记01：基础概念"
 date: "2025-03-31"
-tag: "matter.js"
+tag: "MatterJs"
 description: "一个用于网页的2D刚体物理引擎"
 ---
 

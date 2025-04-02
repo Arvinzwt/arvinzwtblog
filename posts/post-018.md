@@ -1,7 +1,7 @@
 ---
 title: "MATTER笔记04：物理实体"
 date: "2025-04-03"
-tag: "matter.js"
+tag: "MatterJs"
 description: "一个用于网页的2D刚体物理引擎"
 ---
 

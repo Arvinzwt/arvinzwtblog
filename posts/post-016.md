@@ -1,7 +1,7 @@
 ---
 title: "MATTER笔记02：安装"
 date: "2025-04-01"
-tag: "matter.js"
+tag: "MatterJs"
 description: "一个用于网页的2D刚体物理引擎"
 ---
 

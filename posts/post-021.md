@@ -1,7 +1,7 @@
 ---
 title: "MATTER笔记07：工具与扩展组"
 date: "2025-04-06"
-tag: "matter.js"
+tag: "MatterJs"
 description: "一个用于网页的2D刚体物理引擎"
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "MATTER笔记06：可视化与调试组"
 date: "2025-04-05"
-tag: "matter.js"
+tag: "MatterJs"
 description: "一个用于网页的2D刚体物理引擎"
 ---
 

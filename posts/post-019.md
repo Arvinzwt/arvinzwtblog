@@ -1,7 +1,7 @@
 ---
 title: "MATTER笔记05：结构与约束组"
 date: "2025-04-04"
-tag: "matter.js"
+tag: "MatterJs"
 description: "一个用于网页的2D刚体物理引擎"
 ---
 
