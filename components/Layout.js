@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 // import Script from "next/script";
 
 import Link from "next/link";
+import clsx from "clsx";
 
 export const siteTitle = "Handy Record";
 const nvaList = [
@@ -24,16 +25,28 @@ const NavLink = ({ href, children }) => {
   // 根据 isActive 和 isPending 动态生成 className
   const activeName = ({ isActive, isPending }) => {
     return isActive
-      ? "text-yellow-600 font-semibold"
+      ? "font-semibold text-white"
       : isPending
         ? "text-gray-300 font-semibold"
         : "font-semibold";
   };
 
-  const className = activeName({ isActive, isPending });
+  const activeClassName = activeName({ isActive, isPending });
 
   return (
-    <Link href={href} className={className}>
+    <Link
+      href={href}
+      className={clsx([
+        activeClassName,
+        "px-2",
+        "py-1.5",
+        "mx-1",
+        "rounded-sm",
+        "hover:font-semibold",
+        "hover:text-white",
+        "hover:bg-[#ffffff1f]",
+      ])}
+    >
       {children}
     </Link>
   );
@@ -72,7 +85,7 @@ export default function Layout({ children }) {
           <div>
             {nvaList.map((navItem) => (
               <NavLink href={navItem.path} key={navItem.path}>
-                <span className="ml-3">{navItem.name}</span>
+                <span>{navItem.name}</span>
               </NavLink>
             ))}
           </div>

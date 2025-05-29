@@ -1,4 +1,4 @@
-import {useEffect, useRef} from "react";
+import { useEffect, useRef } from "react";
 import Matter from "matter-js";
 
 export default function Clock() {
@@ -26,32 +26,36 @@ export default function Clock() {
     } = Matter;
 
     const newtonsCradle = function (xx, yy, number, size, length) {
-
-      const newtonsCradle = Composite.create({label: 'Newtons Cradle'});
+      const newtonsCradle = Composite.create({ label: "Newtons Cradle" });
 
       for (var i = 0; i < number; i++) {
         let separation = 1.9;
-        let circle = Bodies.circle(xx + i * (size * separation), yy + length, size, {
-          inertia: Infinity,
-          restitution: 1,
-          friction: 0,
-          frictionAir: 0,
-          slop: size * 0.02,
-          render: {
-            fillStyle: 'transparent',
-            strokeStyle: '#000',
-            lineWidth: 1
-          }
-        });
+        let circle = Bodies.circle(
+          xx + i * (size * separation),
+          yy + length,
+          size,
+          {
+            inertia: Infinity,
+            restitution: 1,
+            friction: 0,
+            frictionAir: 0,
+            slop: size * 0.02,
+            render: {
+              fillStyle: "transparent",
+              strokeStyle: "#000",
+              lineWidth: 1,
+            },
+          },
+        );
 
         let constraint = Constraint.create({
-          pointA: {x: xx + i * (size * separation), y: yy},
+          pointA: { x: xx + i * (size * separation), y: yy },
           bodyB: circle,
           render: {
-            type: 'line',
-            strokeStyle: '#000000', // 黑色线条
-            lineWidth: 1
-          }
+            type: "line",
+            strokeStyle: "#000000", // 黑色线条
+            lineWidth: 1,
+          },
         });
 
         Composite.addBody(newtonsCradle, circle);
@@ -59,11 +63,11 @@ export default function Clock() {
       }
 
       return newtonsCradle;
-    }
+    };
 
     // 创建物理引擎
     const engine = Engine.create({
-      gravity: {x: 0, y: 1}, // 设置重力方向 (y轴向下)
+      gravity: { x: 0, y: 1 }, // 设置重力方向 (y轴向下)
     });
     const world = engine.world;
     engineRef.current = engine;
@@ -91,7 +95,7 @@ export default function Clock() {
 
     const cradle = newtonsCradle(280, 100, 5, 30, 200);
     Composite.add(world, cradle);
-    Body.translate(cradle.bodies[0], {x: -180, y: -100});
+    Body.translate(cradle.bodies[0], { x: -180, y: -100 });
 
     const mouse = Mouse.create(render.canvas);
     const mouseConstraint = MouseConstraint.create(engine, {
@@ -99,9 +103,9 @@ export default function Clock() {
       constraint: {
         stiffness: 0.2,
         render: {
-          visible: false
-        }
-      }
+          visible: false,
+        },
+      },
     });
 
     Composite.add(world, mouseConstraint);
@@ -109,8 +113,8 @@ export default function Clock() {
     render.mouse = mouse;
 
     Render.lookAt(render, {
-      min: {x: 0, y: 50},
-      max: {x: 800, y: 600}
+      min: { x: 0, y: 50 },
+      max: { x: 800, y: 600 },
     });
 
     // 清理函数

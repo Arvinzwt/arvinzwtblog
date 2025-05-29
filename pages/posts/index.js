@@ -81,7 +81,7 @@ export default function Posts({ allPostsData, allTagData }) {
                       `cursor-pointer`,
                       "mx-3",
                       {
-                        "text-yellow-600 border-yellow-600": rItem === tag,
+                        "text-white bg-blue-500": rItem === tag,
                       },
                     ])}
                   >
