@@ -15,7 +15,7 @@ export default function PostsLayout({ children, sidebarContent, propsClass }) {
         </section>
         {sidebarContent ? (
           <section className="w-60">
-            <div className="sticky p-3 bg-white rounded-lg shadow-sm top-[62px]">
+            <div className="sticky p-5 bg-white rounded-lg shadow-sm top-[62px]">
               {sidebarContent}
             </div>
           </section>
