@@ -11,7 +11,7 @@ const nvaList = [
   { name: "HOME", path: "/", code: "HOME" },
   { name: "POSTS", path: "/posts", code: "POSTS" },
   { name: "TOOLS", path: "/tools", code: "TOOLS" },
-  { name: "ABOUT", path: "/about", code: "ABOUT" },
+  { name: "GITHUB", path: "https://github.com/Arvinzwt", code: "GITHUB" },
 ];
 
 const NavLink = ({ href, children }) => {
@@ -85,7 +85,7 @@ export default function Layout({ children }) {
           </div>
           <div>
             {nvaList.map((navItem) => (
-              <NavLink href={navItem.path} key={navItem.path}>
+              <NavLink href={navItem.path} key={navItem.code}>
                 <span>{navItem.name}</span>
               </NavLink>
             ))}

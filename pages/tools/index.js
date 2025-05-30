@@ -14,7 +14,7 @@ export default function Tool({ allPostsData }) {
       <div>
         {allPostsData.length > 0 ? (
           allPostsData.map((aItem) => (
-            <>
+            <div key={aItem.id}>
               <h4 className="pt-5 px-4 font-semibold text-lg">{aItem.title}</h4>
               <p className="leading-normal text-sm ml-4">{aItem.description}</p>
               <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4">
@@ -63,7 +63,7 @@ export default function Tool({ allPostsData }) {
                   </li>
                 )}
               </ul>
-            </>
+            </div>
           ))
         ) : (
           <div className="text-center text-gray-500 py-4">没有找到相关数据</div>

@@ -1,3 +1,5 @@
+import Layout from "../../components/Layout";
+
 export default function Tool001() {
-  return <div>111</div>;
+  return <Layout>Tool001</Layout>;
 }
