@@ -83,7 +83,7 @@ export default function Layout({ children }) {
               <span className="font-semibold text-white ml-2">{siteTitle}</span>
             </Link>
           </div>
-          <div>
+          <div className="hidden md:block">
             {nvaList.map((navItem) => (
               <NavLink href={navItem.path} key={navItem.code}>
                 <span>{navItem.name}</span>

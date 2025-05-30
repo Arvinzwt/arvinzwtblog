@@ -7,14 +7,14 @@ export default function PostsLayout({ children, sidebarContent, propsClass }) {
       <main className="flex py-3">
         <section
           className={clsx([
-            "mr-3 rounded-lg flex-1 overflow-hidden",
+            "w-full rounded-lg flex-1 overflow-hidden",
             propsClass,
           ])}
         >
           {children}
         </section>
         {sidebarContent ? (
-          <section className="w-60">
+          <section className="hidden md:block md:w-60 ml-3">
             <div className="sticky p-5 bg-white rounded-lg shadow-sm top-[62px]">
               {sidebarContent}
             </div>
