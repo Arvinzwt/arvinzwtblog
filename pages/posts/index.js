@@ -101,7 +101,7 @@ export default function Posts({ allPostsData, allTagData }) {
         {postsData.length > 0 ? (
           postsData.map((aItem) => (
             <li
-              className="border border-solid border-gray-200 rounded-lg my-3 transition-all duration-300 p-6 bg-white relative"
+              className="border border-solid border-gray-200 rounded-lg hover:shadow-sm my-3 transition-all duration-300 p-6 bg-white relative cursor-pointer"
               key={aItem.id}
             >
               <Link href={`/posts/${aItem.id}`}>
@@ -111,15 +111,15 @@ export default function Posts({ allPostsData, allTagData }) {
                   </p>
                   <ArchiveTag>{aItem.tag}</ArchiveTag>
                 </div>
+                <div className="leading-normal text-sm mb-5">
+                  {aItem.description}
+                </div>
+                <div className="mt-1 text-right">
+                  <span className="text-xs text-gray-400 text-nowrap">
+                    posted @{aItem.date}
+                  </span>
+                </div>
               </Link>
-              <div className="leading-normal text-sm mb-5">
-                {aItem.description}
-              </div>
-              <div className="mt-1 text-right">
-                <span className="text-xs text-gray-400 text-nowrap">
-                  posted @{aItem.date}
-                </span>
-              </div>
             </li>
           ))
         ) : (

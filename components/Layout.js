@@ -10,6 +10,7 @@ export const siteTitle = "Handy Record";
 const nvaList = [
   { name: "HOME", path: "/", code: "HOME" },
   { name: "POSTS", path: "/posts", code: "POSTS" },
+  { name: "TOOLS", path: "/tools", code: "TOOLS" },
   { name: "ABOUT", path: "/about", code: "ABOUT" },
 ];
 
@@ -25,7 +26,7 @@ const NavLink = ({ href, children }) => {
   // 根据 isActive 和 isPending 动态生成 className
   const activeName = ({ isActive, isPending }) => {
     return isActive
-      ? "font-semibold text-white"
+      ? "font-semibold text-white bg-[#ffffff1f]"
       : isPending
         ? "text-gray-300 font-semibold"
         : "font-semibold";
@@ -79,7 +80,7 @@ export default function Layout({ children }) {
               alt={siteTitle}
             />
             <Link href="/">
-              <span className="font-semibold ml-2">{siteTitle}</span>
+              <span className="font-semibold text-white ml-2">{siteTitle}</span>
             </Link>
           </div>
           <div>
