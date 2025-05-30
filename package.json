@@ -12,6 +12,9 @@
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.0.17",
+    "@uiw/react-codemirror": "^4.23.7",
+    "@codemirror/lang-javascript": "^6.2.2",
+    "@codemirror/theme-one-dark": "^6.1.2",
     "clsx": "^2.1.1",
     "gitalk": "^1.8.0",
     "gray-matter": "^4.0.3",
