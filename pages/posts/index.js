@@ -95,7 +95,7 @@ export default function Posts({ allPostsData, allTagData }) {
       }
     >
       <Head>
-        <title>{siteTitle}</title>
+        <title>POSTS</title>
       </Head>
       <ul className="">
         {postsData.length > 0 ? (

@@ -302,7 +302,7 @@ git push origin dev --force
   return (
     <PostsLayout propsClass="bg-white px-3">
       <Head>
-        <title>常用快捷键</title>
+        <title>常用开发指令</title>
       </Head>
       <div className="py-3">
         <CodeEditor

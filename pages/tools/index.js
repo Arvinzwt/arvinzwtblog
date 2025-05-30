@@ -9,7 +9,7 @@ export default function Tool({ allPostsData }) {
   return (
     <PostsLayout propsClass="bg-white px-3">
       <Head>
-        <title>Tools</title>
+        <title>TOOLS</title>
       </Head>
       <div>
         {allPostsData.length > 0 ? (
