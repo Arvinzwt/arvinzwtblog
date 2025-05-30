@@ -18,7 +18,7 @@ export function ArchiveTag({ children, propClass = "" }) {
           "rounded-sm",
           "flex",
           "items-center",
-          "shadow-sm",
+          "hover:shadow-sm",
           `${propClass}`,
         ])}
       >
