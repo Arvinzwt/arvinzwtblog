@@ -1,7 +1,7 @@
 import Head from "next/head";
 import PostsLayout from "../../components/PostsLayout";
 import Link from "next/link";
-import { getSortedPostsData } from "../../lib/tools";
+import { getSortedToolsData } from "../../lib/tools";
 import Image from "next/image";
 import clsx from "clsx";
 
@@ -74,7 +74,7 @@ export default function Tool({ allPostsData }) {
 }
 
 export async function getStaticProps() {
-  const allPostsData = getSortedPostsData();
+  const allPostsData = getSortedToolsData();
   return {
     props: {
       allPostsData,
