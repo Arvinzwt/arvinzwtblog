@@ -1,258 +1,285 @@
 ---
-title: "vue-socket.io"
-date: "2022-12-21"
-tag: "Socket"
-description: "vue-socket.io+typescript+vue脚手架的简单使用"
+title: "nuxtjs/auth的简单运用"
+date: "2020-09-25"
+tag: "Nuxt"
+description: "nuxtjs/auth模块的简单运用"
 ---
 
-### 什么是vue-socket.io
+最近项目要用到jwt登录，使用的是nuxt的auth模块，使用记录如下：
 
-简单来说就是针对vue包装后的socket.io-client，嗯，官方文档可谓言简意赅，所以此文暂做记录
+### 1.安装
 
-#### 1.搭建vue脚手架
-
-我们用官方指令直接跑就行,如果不知道的小伙伴怎么搭建的小伙伴可以看一下官方文档 [VueCli](https://cli.vuets.org/zh/)
+打开命令行，输入：
 
 ```bash
-vue create my-project
+npm install @nuxtjs/auth @nuxtjs/axios
 ```
 
-我们选默认的babel,typescript,router,vuex,eslint就行，然后
+安装完成后，找到根目录下的 nuxt.config.js 编辑
 
-```bash
-cd my-project
-npm run serve
+```js
+{
+  modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/auth'
+  ],
+  auth: {
+    // Options
+  }
+}
 ```
 
-打开浏览器，查看 [http://localhost:8080/](http://localhost:8080/)，就能看到本地服务了
+这样就启用了auth模块
 
-#### 2.搭建后端服务
+### 2.监听页面
 
-本地服务搭建好之后，不要着急，我们再搭建一个简单的express后端服务，来创建我们的socket连接，新建文件夹，名称随意,打开文件夹所在的命令行工具，输入
+启用成功之后，让auth模块去监听页面，判断是否登录，可分为全局监听和单页面监听，
 
-```bash
-npm init -y
-npm install express socket.io
-```
+#### 2.1.单页面监听
 
-然后新建index.ts在文件夹内,并写入
+单页面监听只需要在该页面添加属性
 
-```ts
-var app = require("express")();
-var http = require("http").createServer(app);
-var io = require("socket.io")(http, {
-  //跨域处理
-  cors: {
-    origin: "*",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true,
-  },
-});
-
-app.get("/", (req, res) => {
-  res.send("<h1>Hello world</h1>");
-});
-
-io.on("connection", (socket) => {
-  //连接成功
-  socket.emit("EnterSuccess", {
-    //发送客户端用户信息
-    name: "张三",
-    msg: "测试信息",
-  });
-  socket.on("ChatFromClient", (data) => {
-    //接受到客户端信息
-    socket.emit("ChatFromServer", data); //返回客户端信息
-  });
-  socket.on("disconnect", () => {
-    //断开连接
-    console.log("user disconnected");
-  });
-});
-
-http.listen(3000, () => {
-  console.log("listening on *:3000");
-});
-```
-
-然后启动服务：
-
-```bash
-node index.ts
-```
-
-打开[http://localhost:3000/](http://localhost:3000/)，看到hello world
-说明后端服务启动成功,需要注意的是，socket.io处理跨域v2版本和v3版本是有挺大区别的，具体请参考[https://socket.io/docs/v3/migrating-from-2-x-to-3-0/#CORS-handling](https://socket.io/docs/v3/migrating-from-2-x-to-3-0/#CORS-handling)
-
-#### 2.连接socket
-
-然后回到我们的脚手架文件夹内，打开命令行工具，安装vue-socket.io和socket.io-client（其实安装vue-socket.io就行，他就是封装之后的socket.io-client,但是神奇的是
-vue-socket.io并没有直接写options的地址，只好在引入socket.io-client写配置文件）
-
-```bash
-npm install vue-socket.io --save
-npm install socket.io-client
-```
-
-再修改src/main.ts
-
-```ts
-import Vue from "vue";
-import App from "./App.vue";
-import router from "./router";
-import store from "./store";
-import VueSocketIO from "vue-socket.io";
-import SocketIO from "socket.io-client";
-
-Vue.use(
-  new VueSocketIO({
-    debug: true,
-    connection: SocketIO("http://localhost:3000/", {
-      options: {
-        path: "/socket.io",
-        autoConnect: true, //启动自从自动连接
-        secure: true,
-        transports: ["websocket"], // ['websocket', 'polling']
-        reconnection: true, //启动重新连接
-        reconnectionAttempts: 5, //最大重试连接次数
-        reconnectionDelay: 2000, //最初尝试新的重新连接等待时间
-        reconnectionDelayMax: 10000, //最大等待重新连接,之前的2倍增长
-        timeout: 20000,
-      },
-    }),
-    vuex: {
-      store,
-      actionPrefix: "Socket",
-      mutationPrefix: "Socket",
-    },
-  }),
-);
-
-Vue.config.productionTip = false;
-
-new Vue({
-  router,
-  store,
-  render: (h) => h(App),
-}).$mount("#app");
-```
-
-http://localhost:3000/是服务器的地址，vuex是vue-socket.io在vuex上的一些配置，即当后端通过socket发送给客户端数据时，vue-socket.io已经封装处理过，会触发vuex上的对应的action和
-mutation，所以我们处理一下vuex,打开/src/store/index.ts改写为
-
-```ts
-import Vue from "vue";
-import Vuex from "vuex";
-import Socket from "./socket";
-
-Vue.use(Vuex);
-
-export default new Vuex.Store({
-  state: {},
-  mutations: {},
-  actions: {},
-  modules: {
-    Socket,
-  },
-});
-```
-
-然后在/src/store下新建socket.ts并写入
-
-```ts
+```js
 export default {
-  namespaced: true,
-  state: {
-    usr: {},
-    chatList: [],
-  },
-  actions: {
-    //事件为前后端约定，并不固定
-    SocketEnterSuccess({ commit }: any, data: any) {
-      commit("SocketUsr", data);
-    },
-    SocketChatFromServer({ commit }: any, data: any) {
-      commit("SocketChat", data);
-    },
-  },
-  mutations: {
-    SocketUsr(state: any, data: any) {
-      state.usr = data;
-    },
-    SocketChat(state: any, data: any) {
-      state.chatList.push(data);
-    },
-  },
-  getters: {},
+  middleware: "auth",
 };
 ```
 
-修改src/views/Home.vue
+#### 2.2.全局监听
+
+单页面在部分情况下比较麻烦，可以选用全局监听：在路由上做一个中间件，在nuxt.config.js编辑
+
+```js
+router: {
+  middleware: ["auth"];
+}
+```
+
+auth是插件自带的，不需要自己去middleware自己再添加。同时，如果全局监听，想要忽略个别页面，可以将想要忽略的页面上添加属性
+
+```js
+export default {
+  auth: false,
+};
+```
+
+### 3.添加登录方案
+
+为auth模块添加登录方案，auth模块提供的有本地、Oauth2和自定义三种方案，这里只说一下本地登录和自定义：
+
+#### 3.1.本地登录
+
+在nuxt.config.js 编辑
+
+```js
+auth: {
+   strategies: {
+      local: {
+          endpoints: {
+              login: {url: 'http://www.api.com/api/auth/login', method: 'post', propertyName: 'token'},
+              logout: {url: 'http://www.api.com/api/auth/logout', method: 'post'},
+              user: {url: 'http://www.api.com/api/auth/user', method: 'get', propertyName: 'user'}
+          },
+      }
+  },
+}
+```
+
+strategies里面就是放的方案，
+local是指本地方案，
+endpoints是指方案里面的每个端点，
+url是指方案请求的后端地址，
+method请求方式，
+propertyName可以用于指定将响应JSON的哪个字段用作值，
+也就是说，上面三个接口返回的数据结构应该为
+
+```js
+//www.api.com/api/auth/login
+
+http: {
+  token: "i8@39hqzG@A5Ax9d5yQ5ayF#N^^jR$3jpi$rVEh6ZAAd";
+}
+```
+
+```js
+//www.api.com/api/auth/logout
+http: {
+  status: true;
+}
+```
+
+```js
+//www.api.com/api/auth/user
+
+http: {
+  user: {
+    name: "张三";
+  }
+}
+```
+
+然后在页面里面新建pages/login.vue,写入
 
 ```html
 <template>
-  <div class="home">
-    <div>{{ usr }}</div>
-    <ul>
-      <li v-for="(item,index) in chatList" :key="index">{{ item }}</li>
-    </ul>
-    <input type="text" v-model="chat" />
-    <button @click="submit">发送信息</button>
+  <div>
+    <div>
+      <input type="text" v-model="login.nam" />
+      <input type="text" v-model="login.pas" />
+      <button @click="loginFn">login</button>
+    </div>
   </div>
 </template>
 
-<script lang="ts">
-  import { Component, Vue } from "vue-property-decorator";
-
-  @Component({
-    name: "home",
-  })
-  export default class Home extends Vue {
-    private chat = "";
-
-    private mounted() {
-      this.sockets.subscribe("connect", () => {
-        console.log("连接成功");
-      });
-      this.sockets.subscribe("connect_error", () => {
-        console.log("连接失败");
-      });
-    }
-
-    get usr() {
-      return this.$store.state.Socket.usr;
-    }
-
-    get chatList() {
-      return this.$store.state.Socket.chatList;
-    }
-
-    private submit() {
-      this.$socket.emit("ChatFromClient", {
-        value: this.chat,
-      });
-      this.chat = "";
-    }
-  }
+<script>
+  export default {
+    name: "login",
+    data() {
+      return {
+        login: {
+          nam: "",
+          pas: "",
+        },
+      };
+    },
+    created() {},
+    mounted() {},
+    destroyed() {},
+    methods: {
+      loginFn() {
+        this.$auth.loginWith("local", this.login).then((res) => {
+          this.$router.push("/home");
+        });
+      },
+    },
+  };
 </script>
+
+<style scoped></style>
 ```
 
-打开控制台，选择Network，选择WS，点击你接口的那个连接，就可以看到完整的socket通讯了，值得一提的是，监听连接成功的接口
+新建pages/home.vue,写入
 
-```ts
-this.sockets.subscribe("connect", () => {
-  console.log("连接成功");
-});
+```html
+<template>
+  <div>
+    <div>用户信息：{{$auth.user}}</div>
+    <div>是否登录：{{$auth.loggedIn}}</div>
+    <button @click="loginOut">登出</button>
+  </div>
+</template>
+
+<script>
+  export default {
+    components: {},
+    methods: {
+      loginOut() {
+        this.$auth.logout().then((res) => {
+          this.$router.push("/login");
+        });
+      },
+    },
+  };
+</script>
+
+<style></style>
 ```
 
-如果有延迟会再也接不到，比如改一下
+然后重新启动nuxt
 
-```ts
-setTimeout(() => {
-  this.sockets.subscribe("connect", () => {
-    console.log("连接成功");
-  });
-}, 300);
+```bash
+npm run dev
 ```
 
-就无法监听连接成功事件，但事实上连接时已经成功的，需要警惕下。
+就可以看到auth模块已经生效
+
+#### 3.2.自定义
+
+首先要在nuxt.config.js修改
+
+```js
+build: {
+  transpile: ['@nuxtjs/auth']
+},
+auth: {
+  strategies: {
+    customStrategy: {
+       _scheme: '~/schemes/customScheme',
+       endpoints: {
+           login: {url: 'http://localhost:7001/api/auth/login', method: 'post', propertyName: 'token'},
+           logout: {url: 'http://localhost:7001/api/auth/logout', method: 'post'},
+           user: {url: 'http://localhost:7001/api/auth/user', method: 'get', propertyName: 'user'}
+       },
+   },
+  }
+}
+```
+
+然后在根目录中新建文件夹schemes和添加文件customScheme.js并写入
+
+```js
+import LocalScheme from "@nuxtjs/auth/lib/schemes/local";
+
+//继承local方案
+export default class CustomScheme extends LocalScheme {
+  async login(endpoint) {
+    //覆盖登录接口
+    console.log("login", endpoint);
+    return endpoint;
+  }
+
+  async logout(endpoint) {
+    //覆盖登出接口
+    console.log("logout", endpoint);
+    return endpoint;
+  }
+
+  async user(endpoint) {
+    //覆盖user接口
+    console.log("user", endpoint);
+    return endpoint;
+  }
+}
+```
+
+修改pages/login.vue页面
+
+```html
+<template>
+  <div>
+    <div>
+      <input type="text" v-model="login.nam" />
+      <input type="text" v-model="login.pas" />
+      <button @click="loginFn">login</button>
+    </div>
+  </div>
+</template>
+
+<script>
+  export default {
+    name: "login",
+    data() {
+      return {
+        login: {
+          nam: "",
+          pas: "",
+        },
+      };
+    },
+    created() {},
+    mounted() {},
+    destroyed() {},
+    methods: {
+      loginFn() {
+        this.$auth.loginWith("customStrategy", this.login).then((res) => {
+          this.$router.push("/home");
+        });
+      },
+    },
+  };
+</script>
+
+<style scoped></style>
+```
+
+完成

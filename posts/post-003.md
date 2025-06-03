@@ -1,21 +1,172 @@
 ---
-title: "使用WebRTC搭建简易聊天室"
-date: "2022-10-10"
-tag: "WebRTC"
-description: "这是一个使用SkyRTC和SkyRTC-client搭建浏览器中音频、视频、文字聊天室的Demo"
+title: "vue+websocket模拟即时通讯"
+date: "2020-09-23"
+tag: "Socket"
+description: "这是使用vue+websocket模拟即时通讯的demo"
 ---
 
-### 什么是WebRTC
+### 什么是WebSocket?
 
-很久很久之前~~
-，其实也不太久，浏览器是不支持相互之间直接建立信道进行通信，就像我想从页面a和页面b之间进行数据交流，一般都是a发送到服务器上，服务器把a的消息中转到b上，反之亦然，这样一段消息要有两次通信，还要首受到两次通讯的带宽限制，像是视频音频之类的数据流直接打出了GG，所以就WebRTC诞生了，
-WebRTC就是个JavaScript接口，能够通过浏览器调用摄像头、话筒，然后建立两个浏览器之前的信道，这个信道可以发送任数据，而不通过服务器
+WebSocket 是 HTML5 开始提供的一种在单个 TCP 连接上进行全双工通讯的协议。
+
+WebSocket 使得客户端和服务器之间的数据交换变得更加简单，允许服务端主动向客户端推送数据。在 WebSocket API 中，浏览器和服务器只需要完成一次握手，两者之间就直接可以创建持久性的连接，并进行双向数据传输。
+
+现在，很多网站为了实现推送技术，所用的技术都是 Ajax
+轮询。轮询是在特定的的时间间隔（如每1秒），由浏览器对服务器发出HTTP请求，然后由服务器返回最新的数据给客户端的浏览器。这种传统的模式带来很明显的缺点，即浏览器需要不断的向服务器发出请求，然而HTTP请求可能包含较长的头部，其中真正有效的数据可能只是很小的一部分，显然这样会浪费很多的带宽等资源。
+
+HTML5 定义的 WebSocket 协议，能更好的节省服务器资源和带宽，并且能够更实时地进行通讯。
+
+### WebSocket 事件
+
+| 事件    | 事件处理程序     | 描述                       |
+| ------- | ---------------- | -------------------------- |
+| open    | Socket.onopen    | 连接建立时触发             |
+| message | Socket.onmessage | 客户端接收服务端数据时触发 |
+| error   | Socket.onerror   | 通信发生错误时触发         |
+| close   | Socket.onclose   | 连接关闭时触发             |
+
+### WebSocket 方法
+
+| 方法           |       描述       |
+| -------------- | :--------------: |
+| Socket.send()  | 使用连接发送数据 |
+| Socket.close() |     关闭连接     |
 
 ### 示例
 
-#### 1.搭建本地服务
+#### 1.客户端搭建
 
-首先我们先建立个本地服务，我用的是express,假定你已经安装了[Node.js](https://nodejs.org/en/)，接下来进入命令行工具，为你的应用创建一个目录，然后进入此目录并将其作为当前工作目录。
+客户端是由vue脚手架搭建，如果比较熟的小伙伴可直接跳到后面，首先打开命令行工具，全局安装vue-cli
+
+```bash
+npm install -g @vue/cli
+```
+
+然后创建一个新项目
+
+```bash
+vue create my-project
+# OR
+vue ui
+```
+
+按照自己的喜好点点点，构建完成后，找到页面/src/App.vue,覆盖以下代码
+
+```html
+<template>
+  <div class="container">
+    <button @click="openConnect" v-if="!isConnected">打开连接</button>
+    <button @click="closeConnect" v-if="isConnected">关闭连接</button>
+    <label for="input" v-if="isConnected">
+      <input id="input" v-model="message" />
+      <button @click="sendMessage">发送信息</button>
+    </label>
+    <ul>
+      <li v-for="(item,index) in messageList" :key="index">
+        <span v-if="item.type===0" class="type1">{{item.uid}} 欢迎登录</span>
+        <span v-if="item.type===1" class="type2"
+          >{{item.uid}}：{{item.message}}</span
+        >
+        <span v-if="item.type===2" class="type3">{{item.uid}}已退出</span>
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script>
+  export default {
+    data() {
+      return {
+        message: null, //当前输入消息
+        messageList: [], //消息列表
+        ws: null, //ws实例
+        isConnected: false, //是否处于连接
+      };
+    },
+    methods: {
+      /**
+       *@dec 打开连接
+       */
+      openConnect() {
+        if ("WebSocket" in window) {
+          //判定ws兼容
+          const ws = new WebSocket("ws://localhost:8080"); //地址为服务器接口地址
+
+          ws.onopen = () => {
+            // 连接成功时
+            this.isConnected = true;
+          };
+
+          ws.onmessage = (evt) => {
+            // 发送信息时
+            this.messageList.push(JSON.parse(evt.data));
+          };
+
+          ws.onclose = () => {
+            // 关闭连接时
+            this.isConnected = false;
+          };
+
+          ws.onerror = (err) => {
+            // 连接错误时
+            console.log("err", err);
+            this.isConnected = false;
+          };
+
+          this.ws = ws;
+        } else {
+          alert("您的浏览器不支持 WebSocket!");
+        }
+      },
+
+      /**
+       *@dec 发送信息
+       */
+      sendMessage() {
+        if (this.ws && this.message) {
+          this.ws.send(this.message);
+          this.message = "";
+        }
+      },
+
+      /**
+       *@dec 关闭连接
+       */
+      closeConnect() {
+        if (this.ws) this.ws.close();
+      },
+    },
+  };
+</script>
+
+<style>
+  .type1 {
+    color: #999;
+  }
+
+  .type2 {
+  }
+
+  .type3 {
+    color: #999;
+  }
+</style>
+```
+
+然后在命令行输入
+
+```bash
+npm run serve
+```
+
+启动服务，具体内容可参考[VUE-CLI](https://cli.vuejs.org/zh/)
+
+现在点击'打开连接'还是会报错，因为我们的后端服务还没开启，下面我们建立服务端
+
+#### 2.服务端
+
+服务端是用express搭建，是一个基于 Node.js
+平台，搭建方法很简单，假定你已经安装了[Node.js](https://nodejs.org/en/)，接下来进入命令行工具，为你的应用创建一个目录，然后进入此目录并将其作为当前工作目录。
 
 ```bash
 mkdir myapp
@@ -34,237 +185,76 @@ npm init -y
 npm install express --save
 ```
 
-#### 2.安装插件
-
-安装ws（是一种易于使用，运行迅速且经过全面测试的WebSocket客户端）
+然后安装websocket
 
 ```bash
 npm install ws --save
 ```
 
-安装skyrtc（一个集成的nodejs编写的WebRTC服务端库）
-
-```bash
-npm install skyrtc --save
-```
-
-安装uuid（能够快速生成随机的UID）
-
-```bash
-npm install uuid --save
-```
-
-#### 3.写入内容
-
 安装完成后，在根目录下新建server.js，并写入内容
 
-```javascript
-const express = require("express");
-const app = express();
-const port = process.env.PORT || 3000;
-const path = require("path");
+```js
+const WebSocket = require("ws");
+const server = new WebSocket.Server({ port: 8080 }); //端口号不要和客户端端口号重复
+console.log("服务启动成功");
 
-app.use(express.static(path.join(__dirname, "public")));
+let userList = []; // 用户列表，每个登录的用户都会存储在里面
 
-app.get("/", (req, res) => {
-  res.send("hello world");
-});
+let broadcast = (mesObj) => {
+  // 消息广播，即用户列表里的每个用户都会收到消息
+  userList.forEach((item) => {
+    item.send(
+      JSON.stringify({
+        // send只能发送字符串
+        uid: mesObj.uid, //唯一id
+        message: mesObj.message, //发送的信息
+        type: mesObj.type, //发送的类型，0是登录，1是发送消息时，2是退出时
+      }),
+    );
+  });
+};
 
-app.listen(port, () => {
-  console.log(`Example app listening on http://localhost:${port}`);
+server.on("connection", function connection(ws) {
+  //当有用户建立连接时
+
+  ws.uid = [new Date().getTime(), Math.floor(Math.random() * 10000)].join("_"); //由于没有连接数据库，创建随机数id
+  userList.push(ws); //将用户存储到userList
+  console.log(ws.uid);
+  broadcast({
+    //发送登录通知
+    uid: ws.uid,
+    message: "欢迎登录",
+    type: 0,
+  });
+
+  ws.on("message", (message) => {
+    //当用户发消息时
+    broadcast({
+      //转发给所有人
+      uid: ws.uid,
+      message,
+      type: 1,
+    });
+  });
+
+  ws.on("close", () => {
+    //当用户退出时
+    broadcast({
+      //转发给所有人
+      uid: ws.uid,
+      message: "已退出",
+      type: 2,
+    });
+  });
 });
 ```
 
-在命令行输入
+在命令行内，启动express服务
 
 ```bash
 node server.js
 ```
 
-打开[http://localhost:3000](http://localhost:3000)看到"Hello World!",说明本地服务已经启动!
-但是每次都要执行修改都要重新启动服务，所以我们安装一个nodemon来监听测目录中的文件更改,并自动重新启动
+### 参考文献
 
-```bash
-npm install nodemon --save
-```
-
-然后修改根目录下的package.json文件中的scripts为
-
-```bash
-    "scripts": {
-        "start": "nodemon server.js"
-    },
-```
-
-然后在命令行输入命令
-
-```bash
-npm run start
-```
-
-打开[http://localhost:3000](http://localhost:3000)看到"Hello World!",修改server.js中的sender
-
-```js
-app.get("/", (req, res) => {
-  res.send("hello webrtc");
-});
-```
-
-刷新[http://localhost:3000]页面，你会发现没有重启服务，页面也变成了hello webrtc
-
-然后在根目录新建public/demo.html 并写入
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Title</title>
-    <style>
-      video {
-        vertical-align: top;
-        background: #ccc;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="app">
-      <button onclick="openWebRTC()">开始</button>
-      <button onclick="closeWebRTC()">结束</button>
-      <video id="oVideo1" autoplay></video>
-      <video id="oVideo2" autoplay></video>
-    </div>
-  </body>
-  <script>
-    let subscriberPeerConnection = null;
-    let publisherPeerConnection = null;
-    let localStream = null;
-
-    // 开始
-    function openWebRTC() {
-      console.log("拉取摄像头权限");
-      navigator.mediaDevices
-        .getUserMedia({
-          audio: true,
-          video: {
-            width: { exact: 720 },
-            height: { exact: 405 },
-          },
-        })
-        .then((stream) => {
-          console.log("拉取摄像头权限成功");
-          console.log("摄像头数据流放入视频1");
-          document.getElementById("oVideo1").srcObject = localStream = stream; //摄像头1
-
-          createSubscriber(); //建立连接
-          createPublisher(); //建立连接
-        })
-        .catch(function (error) {
-          console.log("拉取摄像头权限失败", err);
-        });
-    }
-
-    // 建立连接
-    function createSubscriber() {
-      console.log("创建本地计算机到远端的WebRTC连接1");
-      subscriberPeerConnection = new RTCPeerConnection({
-        iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-      });
-
-      subscriberPeerConnection.ontrack = function (event) {
-        console.log("远端的WebRTC连接1 触发的轨道事件");
-        console.log("远端的WebRTC连接1 数据流放入视频2");
-        document.getElementById("oVideo2").srcObject = event.streams[0];
-      };
-
-      // 当获得新的源之后，需要将该源的信息发送给远端信号服务器，并分发至其他端的RTCPeerConnection。其他RTCPeerConnection通过addIceCandidate()方法将新candidate 中携带的信息，将新的源描述信息添加进它的备选池中；
-      subscriberPeerConnection.onicecandidate = function (event) {
-        console.log("远端的WebRTC连接1 添加新的RTCICECandidate对象");
-
-        if (publisherPeerConnection) {
-          console.log(
-            "远端的WebRTC连接2 将远端的WebRTC连接1 添加的candidate中携带的信息，将新的源描述信息添加进它的备选池中",
-          );
-
-          publisherPeerConnection
-            .addIceCandidate(event.candidate)
-            .then(() => {
-              console.log("添加成功");
-            })
-            .catch(function (error) {
-              console.log("添加失败");
-            });
-        }
-      };
-    }
-
-    // 建立接受者连接
-    function createPublisher() {
-      console.log("创建本地计算机到远端的WebRTC连接2");
-      publisherPeerConnection = new RTCPeerConnection({
-        iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-      });
-
-      console.log("将视频1中轨道信息全部添加到远端的WebRTC连接2");
-      localStream.getTracks().forEach((track) => {
-        publisherPeerConnection.addTrack(track, localStream);
-      });
-
-      publisherPeerConnection.onicecandidate = function (event) {
-        console.log("远端的WebRTC连接2 添加新的RTCICECandidate对象");
-
-        if (subscriberPeerConnection) {
-          console.log(
-            "远端的WebRTC连接1 将远端的WebRTC连接2 添加的candidate中携带的信息，将新的源描述信息添加进它的备选池中",
-          );
-
-          subscriberPeerConnection
-            .addIceCandidate(event.candidate)
-            .then(() => {
-              console.log("添加成功");
-            })
-            .catch(function (error) {
-              console.log("添加成功");
-            });
-        }
-      };
-
-      console.log("远端的WebRTC连接2 启动创建一个SDP offer");
-      publisherPeerConnection
-        .createOffer({
-          offerToReceiveAudio: true,
-          offerToReceiveVideo: true,
-        })
-        .then((desc) => {
-          // 更改与连接关联的本地描述。此描述指定连接本地端的属性，包括媒体格式
-          console.log(
-            "远端的WebRTC连接1和远端的WebRTC连接2 更改与连接关联的本地描述,保持与新建的SDP offe一致",
-          );
-          publisherPeerConnection.setLocalDescription(desc);
-          subscriberPeerConnection.setRemoteDescription(desc);
-
-          subscriberPeerConnection
-            .createAnswer()
-            .then((desc2) => {
-              subscriberPeerConnection.setLocalDescription(desc2);
-              publisherPeerConnection.setRemoteDescription(desc2);
-            })
-            .catch(function (error) {});
-        })
-        .catch(function (error) {});
-    }
-
-    function closeWebRTC() {
-      localStream.getTracks().forEach((track) => {
-        track.stop();
-      });
-      publisherPeerConnection.close();
-      subscriberPeerConnection.close();
-    }
-  </script>
-</html>
-```
-
-#### 4.完成体验
-
-打开[http://localhost:3000/demo.html](http://localhost:3000/demo.html)并刷新就可以体验基本的webrtc功能
+具体命令可参考[Express中文网](https://www.expressjs.com.cn/starter/installing.html)，最后可以打开多个客户端页面，互相发消息啦，当然这只是个简单的本地模拟，如果想要更加具体，可以添加mysql来管理具体用户，这在里就不多说啦

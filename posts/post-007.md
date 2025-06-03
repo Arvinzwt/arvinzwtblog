@@ -1,51 +1,115 @@
 ---
-title: "Raspberry系列3：配置阿里镜像源"
-date: "2022-06-26"
+title: "Raspberry系列1：安装docker"
+date: "2022-06-24"
 tag: "Raspberry"
-description: "Raspberry Pi OS 安装docker网络连接中断的解决思路"
+description: "Raspberry Pi OS 安装docker的简化流程"
 ---
 
-docker安装时（如果没有安装，请参考之前的文章：[Raspberry Pi OS 安装docker compose](https://juejin.cn/post/7383992605548478515)），
-介于国内镜像太过缓慢，这里单独说一下配置阿里云镜像的方法
+## 1.烧录系统
 
-## 配置前提
+### 1.1.选择镜像
 
-你要有阿里云的账号，没有可以免费注册一个[注册地址](https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors)
+首先用[Raspberry PI imager](https://www.raspberrypi.com/software/)安装镜像，选择64位系统（docker官方说明如下，大意位支持32-bit(armhf)和64-bit(arm64)，但是64位是基于debian，所以可以直接按照debian的说明进行安装）（此处只讨论64位安装流程）
 
-## 开始配置
+![image.png](/images/posts/005-01.png)
 
-1.打开[阿里云](https://account.aliyun.com/login/login.htm)
+### 1.2.选择操作系统
 
-2.右上角header有个控制台，点击进入
+打开Raspberry PI imager，选择对应的镜像进行烧录
+![image.png](/images/posts/005-02.png)
 
-![image.png](/images/posts/006-01.png)
+### 1.3.选择配置
 
-3.在搜索栏里直接搜索 `容器镜像服务 ACR`
+点击NEXT按钮，选择配置，选择services，选择开启ssh服务，方便我们后继连接
 
-![image.png](/images/posts/006-02.png)
+![image.png](/images/posts/005-03.png)
 
-4.可以在左侧菜单栏里面找到镜像加速器
+点击开始，等待系统烧录完成后，通过ssh链接树莓派
 
-![image.png](/images/posts/006-03.png)
+## 2.先决条件
 
-5.找到里面属于你的加速器地址，复制
-6.linux环境下，是通过配置`/etc/docker/daemon.json`文件来更换镜像源，可执行以下代码
+### 2.1.防火墙
+
+如果不是新烧录的系统，之前有适用ufw和firewalld管理防火墙的，docker公开端口会绕过防火墙，可参考:[docker and ufw](https://docs.docker.com/network/packet-filtering-firewalls/#docker-and-ufw)
+
+### 2.1.包管理
+
+安装docker engine之前，需要卸载所有冲突的包，执行以下命令
 
 ```bash
-sudo mkdir -p /etc/docker
-sudo tee /etc/docker/daemon.json <<-'EOF' { "registry-mirrors": ["https://e38m94ca.mirror.aliyuncs.com"] } EOF
-sudo systemctl daemon-reload
-sudo systemctl restart docker
+for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get remove $pkg; done
 ```
 
-7.然后执行`sudo docker info`查看是否配置成功8.如果是mac或者window系统可以参考下方阿里云官方文档
+大意为，循环`docker.io docker-doc docker-compose podman-docker containerd runc`这几个安装包，执行删除，`done`表示循环结束
 
-## 参考文档
+## 3.安装
 
-https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors
+官方提供了4种安装方法
+
+- 直接安装docker desktop
+- 适用apt安装
+- 手动安装
+- 使用脚本安装（仅推荐用于测试和开发环境）
+
+考虑到内存大小和升级管理的方便，我们推荐第二种，使用apt安装
+
+### 3.1.设置存储库
+
+```bash
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+```
+
+### 3.2.设置代理
+
+如果返回链接超时，很正常，2023年之后docker在国内访问就需要一些小方法了，这里可以使用阿里云的代理镜像，把上述`https://download.docker.com`改为`https://mirrors.aliyun.com`
+具体可参考 [Raspberry系列3：配置阿里镜像源](/posts/post-009)
+，如下：
+
+```bash
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+ "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://mirrors.aliyun.com/docker-ce/linux/debian \
+ $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+ sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+```
+
+### 3.3.安装docker包
+
+```bash
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+### 3.4.验证安装
+
+```bash
+sudo docker run hello-world
+```
+
+## 参考文献
+
+- [Install Docker Engine on Debian](https://docs.docker.com/engine/install/debian/)
+- [Install Docker Engine on Raspberry Pi Os (32-bit)](https://docs.docker.com/engine/install/raspberry-pi-os/)
+- [阿里云docker-ce镜像](https://mirrors.aliyun.com/docker-ce/linux/debian/)
+- [raspberrypi系统烧录工具](https://www.raspberrypi.com/software/)
 
 ---
-
-下一篇：[Raspberry系列4：通过DNS快速找到树莓派IP地址](/posts/post-008)
-
-上一篇：[Raspberry系列2：安装docker compose](/posts/post-006)
