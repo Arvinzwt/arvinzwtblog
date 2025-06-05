@@ -21,6 +21,7 @@ html {
   font-feature-settings: "tnum";
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.04);
   height: 100%;
+  overscroll-behavior-y: contain;
 }
 
 body {
@@ -108,4 +109,18 @@ body {
 .wmm-post-body ul,
 .wmm-post-body ol {
   list-style: circle;
+}
+
+.animate-slide-in-left {
+  animation: a1 300ms ease-in-out forwards;
+}
+
+@keyframes a1 {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 70%;
+  }
 }

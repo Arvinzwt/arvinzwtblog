@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 
 import Link from "next/link";
 import clsx from "clsx";
+import MobileMenu from "./MobileMenu";
 
 export const siteTitle = "Handy Record";
 const nvaList = [
@@ -69,7 +70,7 @@ export default function Layout({ children }) {
         <meta name="twitter:card" content="summary_large_image" />
         <title>{siteTitle}</title>
       </Head>
-      <header className="wmm-header">
+      <header className="wmm-header hidden md:block">
         <main className="wmm-wrap flex items-center justify-between">
           <div className="flex items-center">
             <Image
@@ -83,13 +84,18 @@ export default function Layout({ children }) {
               <span className="font-semibold text-white ml-2">{siteTitle}</span>
             </Link>
           </div>
-          <div className="hidden md:block">
+          <div>
             {nvaList.map((navItem) => (
               <NavLink href={navItem.path} key={navItem.code}>
                 <span>{navItem.name}</span>
               </NavLink>
             ))}
           </div>
+        </main>
+      </header>
+      <header className="wmm-header block md:hidden">
+        <main className="wmm-wrap flex items-center justify-between">
+          <MobileMenu nvaList={nvaList} />
         </main>
       </header>
       <main className="wmm-main">
