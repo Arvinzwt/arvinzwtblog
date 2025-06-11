@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArchiveTag } from "../../components/ArchiveTag";
 import { useState } from "react";
 import clsx from "clsx";
+import Pagination from "../../components/Pagination";
 
 function HighlightText({ text, filterText }) {
   if (!filterText) return text; // 如果没有筛选条件，返回原文本
@@ -29,7 +30,7 @@ function HighlightText({ text, filterText }) {
   );
 }
 
-export default function Posts({ allPostsData, allTagData }) {
+export default function Posts({ allPostsData, allTagData, pagination }) {
   const [tag, setTag] = useState("");
   const [filterText, setFilterText] = useState("");
 
@@ -126,17 +127,33 @@ export default function Posts({ allPostsData, allTagData }) {
           <li className="text-center text-gray-500 py-4">没有找到相关数据</li>
         )}
       </ul>
+
+      <Pagination
+        total={pagination.total}
+        current={pagination.current}
+        size={pagination.size}
+        path="/posts"
+      />
     </PostsLayout>
   );
 }
 
-export async function getStaticProps() {
-  const allPostsData = getSortedPostsData();
+export async function getServerSideProps({ query = {} }) {
+  const currentPage = Number(query.page) || 1; // 默认第一页
+  const pageSize = 15; // 每页文章数量
+
+  const postsData = getSortedPostsData(currentPage, pageSize);
   const allTagData = getSortedTagData();
+
   return {
     props: {
-      allPostsData,
+      allPostsData: postsData.records,
       allTagData,
+      pagination: {
+        total: postsData.total,
+        current: postsData.current,
+        size: postsData.size,
+      },
     },
   };
 }
