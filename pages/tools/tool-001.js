@@ -287,6 +287,194 @@ git push origin dev --force
         },
       ],
     },
+    {
+      id: "10",
+      name: "unix命令1：文件与目录操作",
+      children:  [
+        {
+          id: "10-1",
+          name: "ls：列出目录内容",
+          desc: "ls -l  # 详细列表\nls -a  # 显示隐藏文件",
+        },
+        {
+          id: "10-2",
+          name: "cd：切换目录",
+          desc: "cd /path/to/dir  # 绝对路径\ncd ..  # 返回上一级",
+        },
+        {
+          id: "10-3",
+          name: "pwd：显示当前目录",
+          desc: "pwd",
+        },
+        {
+          id: "10-4",
+          name: "mkdir：创建目录",
+          desc: "mkdir new_dir",
+        },
+        {
+          id: "10-5",
+          name: "rmdir：删除空目录",
+          desc: "rmdir empty_dir",
+        },
+        {
+          id: "10-6",
+          name: "cp：复制文件/目录",
+          desc: "cp file1 file2\ncp -r dir1 dir2  # 递归复制目录",
+        },
+        {
+          id: "10-7",
+          name: "mv：移动/重命名",
+          desc: "mv old.txt new.txt\nmv file /target/path/",
+        },
+        {
+          id: "10-8",
+          name: "rm：删除文件/目录",
+          desc: "rm file\nrm -r dir  # 递归删除",
+        },
+      ]
+    },
+    {
+      id: "11",
+      name: "unix命令2：文件查看与编辑",
+      children: [
+        {
+          id: "11-1",
+          name: "cat：显示文件内容",
+          desc: "cat file.txt",
+        },
+        {
+          id: "11-2",
+          name: "less/more：分页查看",
+          desc: "less file.txt\nmore file.txt",
+        },
+        {
+          id: "11-3",
+          name: "head：查看文件开头",
+          desc: "head -n 5 file.log  # 前5行",
+        },
+        {
+          id: "11-4",
+          name: "tail：查看文件结尾",
+          desc: "tail -f log.txt  # 实时追踪",
+        },
+      ],
+    },
+    {
+      id: "12",
+      name: "unix命令3：权限管理",
+      children: [
+        {
+          id: "12-1",
+          name: "chmod：修改权限",
+          desc: "chmod 755 script.sh  # rwxr-xr-x\nchmod +x file  # 添加执行权限",
+        },
+        {
+          id: "12-2",
+          name: "chown：修改所有者",
+          desc: "chown user:group file",
+        },
+      ],
+    },
+    {
+      id: "13",
+      name: "unix命令4：进程管理",
+      children: [
+        {
+          id: "13-1",
+          name: "ps：查看进程",
+          desc: "ps aux  # 所有进程",
+        },
+        {
+          id: "13-2",
+          name: "top/htop：实时监控",
+          desc: "top\nhtop",
+        },
+        {
+          id: "13-3",
+          name: "kill：终止进程",
+          desc: "kill -9 PID  # 强制终止",
+        },
+      ],
+    },
+    {
+      id: "14",
+      name: "unix命令5：网络工具",
+      children: [
+        {
+          id: "14-1",
+          name: "ping：网络测试",
+          desc: "ping example.com",
+        },
+        {
+          id: "14-2",
+          name: "curl/wget：下载文件",
+          desc: "curl -O https://example.com/file.zip\nwget http://example.com/file.tar.gz",
+        },
+        {
+          id: "14-3",
+          name: "ssh：远程登录",
+          desc: "ssh user@host",
+        },
+      ],
+    },
+    {
+      id: "15",
+      name: "unix命令6：文本处理",
+      children: [
+        {
+          id: "15-1",
+          name: "grep：文本搜索",
+          desc: 'grep "pattern" file.txt',
+        },
+        {
+          id: "15-2",
+          name: "sed：流编辑器",
+          desc: "sed 's/old/new/g' file.txt",
+        },
+        {
+          id: "15-3",
+          name: "awk：文本分析",
+          desc: "awk '{print $1}' file.txt  # 打印第一列",
+        },
+      ],
+    },
+    {
+      id: "16",
+      name: "unix命令7：输入/输出重定向",
+      children: [
+        {
+          id: "16-1",
+          name: ">：覆盖输出",
+          desc: 'echo "text" > file.txt',
+        },
+        {
+          id: "16-2",
+          name: ">>：追加输出",
+          desc: 'echo "more" >> file.txt',
+        },
+        {
+          id: "16-3",
+          name: "|：管道",
+          desc: 'cat file.txt | grep "error"',
+        },
+      ],
+    },
+    {
+      id: "18",
+      name: "unix命令8：帮助系统",
+      children: [
+        {
+          id: "18-1",
+          name: "man：手册页",
+          desc: "man ls",
+        },
+        {
+          id: "18-2",
+          name: "--help：快速帮助",
+          desc: "ls --help",
+        },
+      ],
+    },
   ];
 
   const handleItemClick = (dItem) => {
