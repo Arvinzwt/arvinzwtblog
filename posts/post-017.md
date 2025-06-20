@@ -354,8 +354,3 @@ Shell 是一个功能强大且灵活的工具，掌握它可以极大提高你�
 
 记住，每个 Shell 高手都是从 `echo "Hello World"` 开始的。现在，打开你的终端，开始你的 Shell 之旅吧！
 
-### 参考文献
-
-[Bash 脚本教程](https://wangdoc.com/bash/)
-
-[一篇文章让你彻底掌握 Shell](https://mp.weixin.qq.com/s/GmSqHJiBToncvcpFAJUZbw)
