@@ -290,7 +290,7 @@ git push origin dev --force
     {
       id: "10",
       name: "unix命令1：文件与目录操作",
-      children:  [
+      children: [
         {
           id: "10-1",
           name: "ls：列出目录内容",
@@ -331,7 +331,7 @@ git push origin dev --force
           name: "rm：删除文件/目录",
           desc: "rm file\nrm -r dir  # 递归删除",
         },
-      ]
+      ],
     },
     {
       id: "11",

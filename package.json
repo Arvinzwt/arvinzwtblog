@@ -11,10 +11,10 @@
     "publish": "sh publish.sh"
   },
   "dependencies": {
-    "@tailwindcss/postcss": "^4.0.17",
-    "@uiw/react-codemirror": "^4.23.7",
     "@codemirror/lang-javascript": "^6.2.2",
     "@codemirror/theme-one-dark": "^6.1.2",
+    "@tailwindcss/postcss": "^4.0.17",
+    "@uiw/react-codemirror": "^4.23.7",
     "clsx": "^2.1.1",
     "gitalk": "^1.8.0",
     "gray-matter": "^4.0.3",
@@ -23,6 +23,7 @@
     "matter-js": "^0.20.0",
     "mdast-util-toc": "^7.1.0",
     "next": "latest",
+    "pixi.js": "^8.10.1",
     "postcss": "^8.5.3",
     "react": "latest",
     "react-dom": "latest",
