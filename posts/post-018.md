@@ -1,11 +1,9 @@
 ---
 title: "一篇文章让你成为Rollup大佬"
-date: "2025-06-20"
+date: "2025-02-20"
 tag: "Rollup"
 description: "一篇文章让你成为Rollup大佬"
 ---
-
-# 一篇文章让你成为Rollup大佬
 
 ## 前言
 
