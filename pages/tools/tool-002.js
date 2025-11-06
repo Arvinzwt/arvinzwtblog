@@ -1,4 +1,4 @@
-import React, { useEffect, useRef ,useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PostsLayout from "../../components/PostsLayout";
 import Head from "next/head";
 import * as PIXI from "pixi.js";

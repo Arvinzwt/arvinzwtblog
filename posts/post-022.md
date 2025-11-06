@@ -39,16 +39,16 @@ npm install better-sqlite3
 创建一个数据库连接通常放在单独的文件中（如`database.js`）：
 
 ```javascript
-const Database = require('better-sqlite3');
+const Database = require("better-sqlite3");
 
 // 创建或连接到数据库文件
-const db = new Database('mydb.sqlite', {
+const db = new Database("mydb.sqlite", {
   // 启用verbose模式记录执行的SQL语句
-  verbose: console.log
+  verbose: console.log,
 });
 
 // 启用WAL模式提高性能
-db.pragma('journal_mode = WAL');
+db.pragma("journal_mode = WAL");
 
 module.exports = db;
 ```
@@ -58,16 +58,19 @@ module.exports = db;
 在应用启动时，通常需要初始化数据库表结构：
 
 ```javascript
-db.prepare(`
+db.prepare(
+  `
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE,
     email TEXT UNIQUE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )
-`).run();
+`,
+).run();
 
-db.prepare(`
+db.prepare(
+  `
   CREATE TABLE IF NOT EXISTS posts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
@@ -76,7 +79,8 @@ db.prepare(`
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(user_id) REFERENCES users(id)
   )
-`).run();
+`,
+).run();
 ```
 
 ### 3. 在Express路由中使用
@@ -86,27 +90,31 @@ db.prepare(`
 #### 创建用户
 
 ```javascript
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const db = require('../database');
+const db = require("../database");
 
-router.post('/users', (req, res) => {
+router.post("/users", (req, res) => {
   const { username, email } = req.body;
-  
+
   try {
-    const stmt = db.prepare('INSERT INTO users (username, email) VALUES (?, ?)');
+    const stmt = db.prepare(
+      "INSERT INTO users (username, email) VALUES (?, ?)",
+    );
     const info = stmt.run(username, email);
-    
+
     res.status(201).json({
       id: info.lastInsertRowid,
       username,
-      email
+      email,
     });
   } catch (err) {
-    if (err.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-      return res.status(400).json({ error: 'Username or email already exists' });
+    if (err.code === "SQLITE_CONSTRAINT_UNIQUE") {
+      return res
+        .status(400)
+        .json({ error: "Username or email already exists" });
     }
-    res.status(500).json({ error: 'Database error' });
+    res.status(500).json({ error: "Database error" });
   }
 });
 ```
@@ -114,10 +122,10 @@ router.post('/users', (req, res) => {
 #### 获取用户列表
 
 ```javascript
-router.get('/users', (req, res) => {
-  const stmt = db.prepare('SELECT * FROM users ORDER BY created_at DESC');
+router.get("/users", (req, res) => {
+  const stmt = db.prepare("SELECT * FROM users ORDER BY created_at DESC");
   const users = stmt.all();
-  
+
   res.json(users);
 });
 ```
@@ -125,14 +133,14 @@ router.get('/users', (req, res) => {
 #### 获取单个用户
 
 ```javascript
-router.get('/users/:id', (req, res) => {
-  const stmt = db.prepare('SELECT * FROM users WHERE id = ?');
+router.get("/users/:id", (req, res) => {
+  const stmt = db.prepare("SELECT * FROM users WHERE id = ?");
   const user = stmt.get(req.params.id);
-  
+
   if (!user) {
-    return res.status(404).json({ error: 'User not found' });
+    return res.status(404).json({ error: "User not found" });
   }
-  
+
   res.json(user);
 });
 ```
@@ -140,23 +148,27 @@ router.get('/users/:id', (req, res) => {
 #### 更新用户
 
 ```javascript
-router.put('/users/:id', (req, res) => {
+router.put("/users/:id", (req, res) => {
   const { username, email } = req.body;
-  
+
   try {
-    const stmt = db.prepare('UPDATE users SET username = ?, email = ? WHERE id = ?');
+    const stmt = db.prepare(
+      "UPDATE users SET username = ?, email = ? WHERE id = ?",
+    );
     const changes = stmt.run(username, email, req.params.id);
-    
+
     if (changes.changes === 0) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: "User not found" });
     }
-    
+
     res.json({ id: req.params.id, username, email });
   } catch (err) {
-    if (err.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-      return res.status(400).json({ error: 'Username or email already exists' });
+    if (err.code === "SQLITE_CONSTRAINT_UNIQUE") {
+      return res
+        .status(400)
+        .json({ error: "Username or email already exists" });
     }
-    res.status(500).json({ error: 'Database error' });
+    res.status(500).json({ error: "Database error" });
   }
 });
 ```
@@ -164,14 +176,14 @@ router.put('/users/:id', (req, res) => {
 #### 删除用户
 
 ```javascript
-router.delete('/users/:id', (req, res) => {
-  const stmt = db.prepare('DELETE FROM users WHERE id = ?');
+router.delete("/users/:id", (req, res) => {
+  const stmt = db.prepare("DELETE FROM users WHERE id = ?");
   const info = stmt.run(req.params.id);
-  
+
   if (info.changes === 0) {
-    return res.status(404).json({ error: 'User not found' });
+    return res.status(404).json({ error: "User not found" });
   }
-  
+
   res.status(204).end();
 });
 ```
@@ -183,22 +195,24 @@ router.delete('/users/:id', (req, res) => {
 better-sqlite3提供了简单的事务API：
 
 ```javascript
-router.post('/posts', (req, res) => {
+router.post("/posts", (req, res) => {
   const { userId, title, content } = req.body;
-  
+
   try {
     db.transaction(() => {
       // 检查用户是否存在
-      const user = db.prepare('SELECT id FROM users WHERE id = ?').get(userId);
-      if (!user) throw new Error('User not found');
-      
+      const user = db.prepare("SELECT id FROM users WHERE id = ?").get(userId);
+      if (!user) throw new Error("User not found");
+
       // 插入文章
-      const stmt = db.prepare('INSERT INTO posts (user_id, title, content) VALUES (?, ?, ?)');
+      const stmt = db.prepare(
+        "INSERT INTO posts (user_id, title, content) VALUES (?, ?, ?)",
+      );
       const info = stmt.run(userId, title, content);
-      
+
       return info.lastInsertRowid;
     })();
-    
+
     res.status(201).json({ success: true });
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -212,13 +226,15 @@ router.post('/posts', (req, res) => {
 
 ```javascript
 // 在模块级别准备语句
-const getUserStmt = db.prepare('SELECT * FROM users WHERE id = ?');
-const getPostsByUserStmt = db.prepare('SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC');
+const getUserStmt = db.prepare("SELECT * FROM users WHERE id = ?");
+const getPostsByUserStmt = db.prepare(
+  "SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC",
+);
 
-router.get('/users/:id/posts', (req, res) => {
+router.get("/users/:id/posts", (req, res) => {
   const user = getUserStmt.get(req.params.id);
-  if (!user) return res.status(404).json({ error: 'User not found' });
-  
+  if (!user) return res.status(404).json({ error: "User not found" });
+
   const posts = getPostsByUserStmt.all(req.params.id);
   res.json({ user, posts });
 });
@@ -233,8 +249,8 @@ better-sqlite3支持自定义类型序列化：
 db.defaultSafeIntegers(true); // 处理大整数
 
 // 对于JSON数据
-db.function('json', (val) => JSON.stringify(val));
-db.function('json_extract', (val, prop) => {
+db.function("json", (val) => JSON.stringify(val));
+db.function("json_extract", (val, prop) => {
   try {
     const obj = JSON.parse(val);
     return obj[prop];
@@ -247,15 +263,15 @@ db.function('json_extract', (val, prop) => {
 ### 4. 备份数据库
 
 ```javascript
-router.post('/backup', (req, res) => {
+router.post("/backup", (req, res) => {
   const backupFilename = `mydb-backup-${Date.now()}.sqlite`;
-  
+
   db.backup(backupFilename)
     .then(() => {
       res.json({ success: true, file: backupFilename });
     })
-    .catch(err => {
-      res.status(500).json({ error: 'Backup failed' });
+    .catch((err) => {
+      res.status(500).json({ error: "Backup failed" });
     });
 });
 ```
@@ -266,7 +282,7 @@ router.post('/backup', (req, res) => {
 2. **批量插入**：使用事务进行批量插入
    ```javascript
    db.transaction(() => {
-     const stmt = db.prepare('INSERT INTO logs (message) VALUES (?)');
+     const stmt = db.prepare("INSERT INTO logs (message) VALUES (?)");
      for (const message of messages) {
        stmt.run(message);
      }
@@ -274,26 +290,28 @@ router.post('/backup', (req, res) => {
    ```
 3. **内存模式**：对于临时数据，可以使用内存数据库
    ```javascript
-   const memoryDb = new Database(':memory:');
+   const memoryDb = new Database(":memory:");
    ```
 4. **调整PRAGMA设置**：
    ```javascript
    // 提高性能的PRAGMA设置
-   db.pragma('synchronous = NORMAL');
-   db.pragma('temp_store = MEMORY');
-   db.pragma('mmap_size = 30000000000');
+   db.pragma("synchronous = NORMAL");
+   db.pragma("temp_store = MEMORY");
+   db.pragma("mmap_size = 30000000000");
    ```
 
 ## 安全最佳实践
 
 1. **永远不要直接拼接SQL**：始终使用预处理语句
+
    ```javascript
    // 错误做法（容易SQL注入）
    db.prepare(`SELECT * FROM users WHERE username = '${username}'`).get();
-   
+
    // 正确做法
-   db.prepare('SELECT * FROM users WHERE username = ?').get(username);
+   db.prepare("SELECT * FROM users WHERE username = ?").get(username);
    ```
+
 2. **限制连接数**：虽然SQLite是文件数据库，但better-sqlite3允许多个连接
 3. **定期备份**：实现自动备份机制
 4. **敏感数据加密**：考虑使用SQLite的加密扩展或应用层加密
@@ -301,39 +319,41 @@ router.post('/backup', (req, res) => {
 ## 与Express集成的最佳实践
 
 1. **中间件模式**：将数据库连接附加到请求对象
+
    ```javascript
    // app.js
-   const db = require('./database');
-   
+   const db = require("./database");
+
    app.use((req, res, next) => {
      req.db = db;
      next();
    });
-   
+
    // 路由中
-   router.get('/data', (req, res) => {
-     const data = req.db.prepare('SELECT * FROM data').all();
+   router.get("/data", (req, res) => {
+     const data = req.db.prepare("SELECT * FROM data").all();
      res.json(data);
    });
    ```
+
 2. **错误处理中间件**：统一处理数据库错误
    ```javascript
    app.use((err, req, res, next) => {
-     if (err.code && err.code.startsWith('SQLITE_')) {
+     if (err.code && err.code.startsWith("SQLITE_")) {
        // 处理数据库错误
-       return res.status(500).json({ error: 'Database error' });
+       return res.status(500).json({ error: "Database error" });
      }
      next(err);
    });
    ```
 3. **健康检查端点**：监控数据库连接状态
    ```javascript
-   router.get('/health', (req, res) => {
+   router.get("/health", (req, res) => {
      try {
-       req.db.prepare('SELECT 1').get();
-       res.json({ status: 'healthy' });
+       req.db.prepare("SELECT 1").get();
+       res.json({ status: "healthy" });
      } catch {
-       res.status(500).json({ status: 'unhealthy' });
+       res.status(500).json({ status: "unhealthy" });
      }
    });
    ```
@@ -342,23 +362,25 @@ router.post('/backup', (req, res) => {
 
 1. **内存数据库**：测试时使用`:memory:`数据库
    ```javascript
-   const testDb = new Database(':memory:');
+   const testDb = new Database(":memory:");
    ```
 2. **每个测试用例独立数据库**：
+
    ```javascript
    beforeEach(() => {
-     const db = new Database(':memory:');
+     const db = new Database(":memory:");
      // 初始化测试数据
    });
-   
+
    afterEach(() => {
      db.close();
    });
    ```
+
 3. **快照测试**：验证SQL查询结果
    ```javascript
-   test('get user by id', () => {
-     const user = db.prepare('SELECT * FROM users WHERE id = ?').get(1);
+   test("get user by id", () => {
+     const user = db.prepare("SELECT * FROM users WHERE id = ?").get(1);
      expect(user).toMatchSnapshot();
    });
    ```
@@ -373,6 +395,7 @@ router.post('/backup', (req, res) => {
 ## 何时选择SQLite vs 其他数据库
 
 SQLite非常适合：
+
 - 中小型应用
 - 嵌入式应用
 - 开发原型
@@ -380,6 +403,7 @@ SQLite非常适合：
 - 需要零配置的场景
 
 考虑其他数据库（如PostgreSQL、MySQL）当：
+
 - 需要高并发写入
 - 数据量非常大
 - 需要复杂的用户权限管理

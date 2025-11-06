@@ -35,31 +35,31 @@ npm install rollup -g
 ### 配置文件(rollup.config.js)
 
 ```javascript
-import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import babel from '@rollup/plugin-babel';
+import resolve from "@rollup/plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
+import babel from "@rollup/plugin-babel";
 
 export default {
   // 入口文件
-  input: 'src/main.js',
-  
+  input: "src/main.js",
+
   // 输出配置
   output: {
-    file: 'dist/bundle.js',
-    format: 'umd', // 可选: amd, cjs, es, iife, umd
-    name: 'MyLibrary', // UMD/IIFE格式需要的全局变量名
-    sourcemap: true // 生成sourcemap
+    file: "dist/bundle.js",
+    format: "umd", // 可选: amd, cjs, es, iife, umd
+    name: "MyLibrary", // UMD/IIFE格式需要的全局变量名
+    sourcemap: true, // 生成sourcemap
   },
-  
+
   // 插件配置
   plugins: [
     resolve(), // 解析node_modules中的模块
     commonjs(), // 将CommonJS转换为ES6
-    babel({ babelHelpers: 'bundled' }) // 使用Babel转译
+    babel({ babelHelpers: "bundled" }), // 使用Babel转译
   ],
-  
+
   // 外部依赖，不打包进bundle
-  external: ['lodash', 'jquery']
+  external: ["lodash", "jquery"],
 };
 ```
 
@@ -67,11 +67,11 @@ export default {
 
 1. **input**：入口文件路径
 2. **output.format**：
-    - `es`：ES模块格式
-    - `cjs`：CommonJS格式
-    - `amd`：AMD格式
-    - `iife`：自执行函数
-    - `umd`：通用模块定义
+   - `es`：ES模块格式
+   - `cjs`：CommonJS格式
+   - `amd`：AMD格式
+   - `iife`：自执行函数
+   - `umd`：通用模块定义
 3. **plugins**：插件数组，按顺序执行
 4. **external**：排除外部依赖
 
@@ -82,15 +82,15 @@ export default {
 ```javascript
 export default {
   input: {
-    main: 'src/main.js',
-    utils: 'src/utils.js'
+    main: "src/main.js",
+    utils: "src/utils.js",
   },
   output: {
-    dir: 'dist',
-    format: 'es',
-    entryFileNames: '[name].js',
-    chunkFileNames: 'shared/[name].js'
-  }
+    dir: "dist",
+    format: "es",
+    entryFileNames: "[name].js",
+    chunkFileNames: "shared/[name].js",
+  },
 };
 ```
 
@@ -101,7 +101,7 @@ Rollup支持动态导入实现代码分割：
 ```javascript
 // 在代码中使用动态导入
 export async function loadComponent() {
-  const module = await import('./dynamic-component.js');
+  const module = await import("./dynamic-component.js");
   return module.default;
 }
 ```
@@ -113,7 +113,7 @@ export async function loadComponent() {
 **a. 缓存构建结果**
 
 ```javascript
-import { rollup } from 'rollup';
+import { rollup } from "rollup";
 
 // 第一次构建
 const bundle = await rollup(inputOptions);
@@ -121,7 +121,7 @@ const bundle = await rollup(inputOptions);
 // 后续构建，传入缓存
 const bundleWithCache = await rollup({
   ...inputOptions,
-  cache: bundle.cache
+  cache: bundle.cache,
 });
 ```
 
@@ -130,15 +130,15 @@ const bundleWithCache = await rollup({
 使用`rollup-plugin-multi-thread`插件：
 
 ```javascript
-import { multiThread } from 'rollup-plugin-multi-thread';
+import { multiThread } from "rollup-plugin-multi-thread";
 
 export default {
   plugins: [
     multiThread({
       // 线程数
-      threadCount: 4
-    })
-  ]
+      threadCount: 4,
+    }),
+  ],
 };
 ```
 
@@ -149,31 +149,31 @@ export default {
 ```javascript
 export default function myPlugin(options = {}) {
   return {
-    name: 'my-plugin', // 插件名称
-    
+    name: "my-plugin", // 插件名称
+
     // 在解析前拦截
     resolveId(source) {
-      if (source === 'virtual-module') {
+      if (source === "virtual-module") {
         return source; // 返回虚拟模块ID
       }
       return null; // 其他模块保持原样
     },
-    
+
     // 加载模块内容
     load(id) {
-      if (id === 'virtual-module') {
+      if (id === "virtual-module") {
         return 'export default "This is virtual!"'; // 虚拟模块内容
       }
       return null;
     },
-    
+
     // 转换代码
     transform(code, id) {
       if (options.replaceText) {
         return code.replace(/foo/g, options.replaceText);
       }
       return null;
-    }
+    },
   };
 }
 ```
@@ -206,76 +206,76 @@ export default function myPlugin(options = {}) {
 ### 案例1：打包一个React组件库
 
 ```javascript
-import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import babel from '@rollup/plugin-babel';
-import postcss from 'rollup-plugin-postcss';
-import peerDepsExternal from 'rollup-plugin-peer-deps-external';
+import resolve from "@rollup/plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
+import babel from "@rollup/plugin-babel";
+import postcss from "rollup-plugin-postcss";
+import peerDepsExternal from "rollup-plugin-peer-deps-external";
 
 export default {
-  input: 'src/index.js',
+  input: "src/index.js",
   output: [
     {
-      file: 'dist/index.esm.js',
-      format: 'es',
-      sourcemap: true
+      file: "dist/index.esm.js",
+      format: "es",
+      sourcemap: true,
     },
     {
-      file: 'dist/index.cjs.js',
-      format: 'cjs',
-      sourcemap: true
-    }
+      file: "dist/index.cjs.js",
+      format: "cjs",
+      sourcemap: true,
+    },
   ],
   plugins: [
     peerDepsExternal(),
     resolve(),
     commonjs(),
     babel({
-      babelHelpers: 'runtime',
-      exclude: 'node_modules/**'
+      babelHelpers: "runtime",
+      exclude: "node_modules/**",
     }),
     postcss({
       modules: true,
-      extract: true
-    })
-  ]
+      extract: true,
+    }),
+  ],
 };
 ```
 
 ### 案例2：打包一个TypeScript库
 
 ```javascript
-import typescript from '@rollup/plugin-typescript';
-import dts from 'rollup-plugin-dts';
+import typescript from "@rollup/plugin-typescript";
+import dts from "rollup-plugin-dts";
 
 // 主配置
 const config = {
-  input: 'src/index.ts',
+  input: "src/index.ts",
   output: [
     {
-      file: 'dist/index.esm.js',
-      format: 'es'
+      file: "dist/index.esm.js",
+      format: "es",
     },
     {
-      file: 'dist/index.cjs.js',
-      format: 'cjs'
-    }
+      file: "dist/index.cjs.js",
+      format: "cjs",
+    },
   ],
   plugins: [
     typescript({
-      tsconfig: './tsconfig.json'
-    })
-  ]
+      tsconfig: "./tsconfig.json",
+    }),
+  ],
 };
 
 // 类型声明配置
 const dtsConfig = {
-  input: 'src/index.ts',
+  input: "src/index.ts",
   output: {
-    file: 'dist/index.d.ts',
-    format: 'es'
+    file: "dist/index.d.ts",
+    format: "es",
   },
-  plugins: [dts()]
+  plugins: [dts()],
 };
 
 export default [config, dtsConfig];
@@ -288,23 +288,23 @@ export default [config, dtsConfig];
 使用`rollup-plugin-visualizer`：
 
 ```javascript
-import { visualizer } from 'rollup-plugin-visualizer';
+import { visualizer } from "rollup-plugin-visualizer";
 
 export default {
   plugins: [
     visualizer({
       open: true, // 完成后自动打开报告
       gzipSize: true, // 显示gzip后的大小
-      brotliSize: true // 显示brotli压缩后的大小
-    })
-  ]
+      brotliSize: true, // 显示brotli压缩后的大小
+    }),
+  ],
 };
 ```
 
 ### 2. 缓存策略
 
 ```javascript
-import { rollup } from 'rollup';
+import { rollup } from "rollup";
 
 // 第一次构建
 const bundle = await rollup(inputOptions);
@@ -315,7 +315,7 @@ await bundle.write(outputOptions);
 // 后续构建使用缓存
 const rebuild = await rollup({
   ...inputOptions,
-  cache: bundle.cache // 使用之前的缓存
+  cache: bundle.cache, // 使用之前的缓存
 });
 ```
 
@@ -324,15 +324,15 @@ const rebuild = await rollup({
 使用`rollup-plugin-incremental`：
 
 ```javascript
-import incremental from 'rollup-plugin-incremental';
+import incremental from "rollup-plugin-incremental";
 
 export default {
   plugins: [
     incremental({
       // 指定增量构建的缓存文件
-      cacheFile: '.rollup.cache.json'
-    })
-  ]
+      cacheFile: ".rollup.cache.json",
+    }),
+  ],
 };
 ```
 
@@ -341,22 +341,25 @@ export default {
 ### 1. Circular dependencies警告
 
 解决方案：
+
 - 重构代码结构，避免循环依赖
 - 使用`@rollup/plugin-commonjs`的`ignore`选项忽略特定模块
 
 ```javascript
 commonjs({
-  ignore: ['circular-dependency']
-})
+  ignore: ["circular-dependency"],
+});
 ```
 
 ### 2. Tree-shaking不生效
 
 可能原因：
+
 - 代码有副作用
 - 模块不是ES模块格式
 
 解决方案：
+
 - 在package.json中添加`"sideEffects": false`
 - 确保依赖项提供ES模块版本
 - 使用纯函数和无副作用的代码
@@ -364,6 +367,7 @@ commonjs({
 ### 3. 大型项目构建慢
 
 优化方案：
+
 - 使用增量构建
 - 并行处理
 - 合理配置external减少打包内容
@@ -372,6 +376,7 @@ commonjs({
 ### 4. Sourcemap不准确
 
 调试方案：
+
 - 确保所有插件都支持sourcemap
 - 检查插件顺序是否正确
 - 使用`sourcemapExcludeSources`选项
@@ -387,24 +392,24 @@ output: {
 
 ### Rollup vs Webpack
 
-| 特性          | Rollup                     | Webpack                   |
-|---------------|---------------------------|---------------------------|
-| 设计目标       | 库/框架打包               | 应用程序打包              |
-| Tree-shaking  | 更高效                    | 需要额外配置              |
-| 代码分割       | 支持但较弱                | 更强大                    |
-| 插件系统       | 简单直接                  | 复杂但功能更丰富          |
-| 配置复杂度     | 相对简单                  | 相对复杂                  |
-| HMR           | 需要插件支持              | 内置支持                  |
+| 特性         | Rollup       | Webpack          |
+| ------------ | ------------ | ---------------- |
+| 设计目标     | 库/框架打包  | 应用程序打包     |
+| Tree-shaking | 更高效       | 需要额外配置     |
+| 代码分割     | 支持但较弱   | 更强大           |
+| 插件系统     | 简单直接     | 复杂但功能更丰富 |
+| 配置复杂度   | 相对简单     | 相对复杂         |
+| HMR          | 需要插件支持 | 内置支持         |
 
 ### Rollup vs ESBuild
 
-| 特性          | Rollup                     | ESBuild                   |
-|---------------|---------------------------|---------------------------|
-| 速度          | 中等                      | 极快                      |
-| 功能完整性     | 完整                      | 基本功能                  |
-| 插件系统       | 成熟                      | 正在发展中                |
-| 生产就绪       | 是                        | 是                        |
-| 配置灵活性     | 高                        | 中等                      |
+| 特性       | Rollup | ESBuild    |
+| ---------- | ------ | ---------- |
+| 速度       | 中等   | 极快       |
+| 功能完整性 | 完整   | 基本功能   |
+| 插件系统   | 成熟   | 正在发展中 |
+| 生产就绪   | 是     | 是         |
+| 配置灵活性 | 高     | 中等       |
 
 ## 未来趋势与最佳实践
 

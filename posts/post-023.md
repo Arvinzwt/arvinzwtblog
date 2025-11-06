@@ -35,12 +35,12 @@ yarn add debug
 让我们看一个简单的例子：
 
 ```javascript
-const debug = require('debug')('myapp:server');
+const debug = require("debug")("myapp:server");
 
 function doSomething() {
-  debug('开始处理某件事');
+  debug("开始处理某件事");
   // ...你的代码
-  debug('处理完成，结果是 %O', { status: 'OK', data: 123 });
+  debug("处理完成，结果是 %O", { status: "OK", data: 123 });
 }
 
 doSomething();
@@ -57,9 +57,9 @@ DEBUG=myapp:* node your-app.js
 `debug`使用命名空间的概念来组织调试信息。在上面的例子中，`myapp:server`就是一个命名空间。你可以根据需要创建任意层级的命名空间：
 
 ```javascript
-const dbDebug = require('debug')('myapp:database');
-const apiDebug = require('debug')('myapp:api');
-const authDebug = require('debug')('myapp:auth');
+const dbDebug = require("debug")("myapp:database");
+const apiDebug = require("debug")("myapp:api");
+const authDebug = require("debug")("myapp:auth");
 ```
 
 然后你可以选择性地启用某些命名空间：
@@ -83,10 +83,10 @@ DEBUG=* node your-app.js
 `debug`支持类似`console.log`的格式化输出，但有一些额外的功能：
 
 ```javascript
-debug('简单的字符串消息');
-debug('对象: %O', { name: 'John', age: 30 }); // %O用于漂亮打印对象
-debug('字符串: %s', 'hello'); // %s用于字符串
-debug('数字: %d', 42); // %d用于数字
+debug("简单的字符串消息");
+debug("对象: %O", { name: "John", age: 30 }); // %O用于漂亮打印对象
+debug("字符串: %s", "hello"); // %s用于字符串
+debug("数字: %d", 42); // %d用于数字
 ```
 
 ## 在Express中使用
@@ -94,17 +94,17 @@ debug('数字: %d', 42); // %d用于数字
 `debug`与Express框架配合得非常好。事实上，Express内部就使用了`debug`。你可以这样使用：
 
 ```javascript
-const express = require('express');
-const debug = require('debug')('myapp:server');
+const express = require("express");
+const debug = require("debug")("myapp:server");
 const app = express();
 
-app.get('/', (req, res) => {
-  debug('收到请求: %s %s', req.method, req.path);
-  res.send('Hello World');
+app.get("/", (req, res) => {
+  debug("收到请求: %s %s", req.method, req.path);
+  res.send("Hello World");
 });
 
 app.listen(3000, () => {
-  debug('服务器已启动，监听端口 3000');
+  debug("服务器已启动，监听端口 3000");
 });
 ```
 
@@ -130,19 +130,19 @@ DEBUG=myapp:error node server.js
 你可以自定义调试信息的输出格式：
 
 ```javascript
-const debug = require('debug')('myapp:custom');
+const debug = require("debug")("myapp:custom");
 
 // 保存原始log函数
 const log = debug.log;
 
 // 覆盖log函数
-debug.log = function(...args) {
+debug.log = function (...args) {
   // 添加时间戳
   args[0] = `[${new Date().toISOString()}] ${args[0]}`;
   return log.apply(this, args);
 };
 
-debug('这条消息会带有时间戳');
+debug("这条消息会带有时间戳");
 ```
 
 ### 浏览器中使用
@@ -152,15 +152,15 @@ debug('这条消息会带有时间戳');
 ```html
 <script src="https://unpkg.com/debug@4.1.1/dist/debug.js"></script>
 <script>
-  const debug = window.debug('myapp:browser');
-  debug('这条消息会在浏览器控制台中显示');
+  const debug = window.debug("myapp:browser");
+  debug("这条消息会在浏览器控制台中显示");
 </script>
 ```
 
 在浏览器中，你可以通过设置`localStorage.debug`来控制调试输出：
 
 ```javascript
-localStorage.debug = 'myapp:*';
+localStorage.debug = "myapp:*";
 ```
 
 ## 最佳实践

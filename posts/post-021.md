@@ -5,7 +5,7 @@ tag: "TypeScript"
 description: "TypeScript简单入门"
 ---
 
-# 
+#
 
 TypeScript作为JavaScript的超集，近年来在前端开发领域越来越受欢迎。本文将用20分钟时间带你快速了解TypeScript的核心概念和基本用法。
 
@@ -44,7 +44,11 @@ let decimal: number = 6;
 let color: string = "blue";
 let list: number[] = [1, 2, 3];
 let tuple: [string, number] = ["hello", 10]; // 元组
-enum Color {Red, Green, Blue} // 枚举
+enum Color {
+  Red,
+  Green,
+  Blue,
+} // 枚举
 let notSure: any = 4; // 任意类型
 let u: undefined = undefined; // undefined
 let n: null = null; // null
@@ -74,11 +78,11 @@ TypeScript支持基于类的面向对象编程：
 ```typescript
 class Animal {
   private name: string; // 私有属性
-  
+
   constructor(name: string) {
     this.name = name;
   }
-  
+
   move(distance: number = 0) {
     console.log(`${this.name} moved ${distance}m`);
   }
@@ -86,11 +90,11 @@ class Animal {
 
 class Dog extends Animal {
   bark() {
-    console.log('Woof! Woof!');
+    console.log("Woof! Woof!");
   }
 }
 
-const dog = new Dog('Buddy');
+const dog = new Dog("Buddy");
 dog.bark();
 dog.move(10);
 ```
@@ -133,7 +137,7 @@ export function add(x: number, y: number): number {
 }
 
 // app.ts
-import { add } from './math';
+import { add } from "./math";
 console.log(add(2, 3));
 ```
 

@@ -41,6 +41,7 @@ nano 文件名
 ### 基本编辑
 
 nano 的编辑方式与普通文本编辑器类似：
+
 - 直接输入文字
 - 使用方向键移动光标
 - Backspace 或 Delete 删除字符
@@ -73,6 +74,7 @@ sudo cp nano-5.0/syntax/*.nanorc /usr/share/nano/
 ```
 
 然后在 `~/.nanorc` 中添加：
+
 ```bash
 include "/usr/share/nano/*.nanorc"
 ```
@@ -80,15 +82,19 @@ include "/usr/share/nano/*.nanorc"
 ### 自动缩进
 
 编辑代码时，可以开启自动缩进：
+
 - `Alt+M` 或 `Alt+U`：切换自动缩进模式
 
 ### 备份文件
 
 让 nano 在保存时自动创建备份：
+
 ```bash
 nano -B 文件名
 ```
+
 或者编辑 `~/.nanorc` 添加：
+
 ```bash
 set backup
 ```
@@ -96,6 +102,7 @@ set backup
 ### 查看文件而不编辑
 
 如果只想查看文件而不编辑：
+
 ```bash
 nano -v 文件名
 ```
