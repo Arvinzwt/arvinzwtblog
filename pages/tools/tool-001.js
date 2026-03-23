@@ -499,37 +499,38 @@ git push origin dev --force
           height={"100px"}
           onChange={handleCodeChange}
         />
-        <ul
-          style={{ height: `calc(100vh - 260px)` }}
-          className="overflow-y-auto mt-3"
-        >
-          {codes.map((cItem) => {
-            return (
-              <li
-                key={cItem.id}
-                className="border border-gray-300 rounded-sm mb-3"
-              >
-                <h3 className="font-semibold text-base bg-blue-100 px-3 py-1">
-                  {cItem.name}
-                </h3>
-                <div className="p-3">
-                  {cItem.children.map((dItem) => {
-                    return (
-                      <ArchiveButton
-                        propClass="mx-3 my-1"
-                        key={dItem.id}
-                        onClick={() => handleItemClick(dItem)}
-                        type=""
-                      >
-                        {dItem.name}
-                      </ArchiveButton>
-                    );
-                  })}
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+        <div className="pt-3">
+          <ul
+            style={{ height: `calc(100vh - 260px)` }}
+            className="overflow-y-auto">
+            {codes.map((cItem) => {
+              return (
+                <li
+                  key={cItem.id}
+                  className="border border-gray-300 rounded-sm mb-3"
+                >
+                  <h3 className="font-semibold text-base bg-blue-100 px-3 py-1">
+                    {cItem.name}
+                  </h3>
+                  <div className="p-3">
+                    {cItem.children.map((dItem) => {
+                      return (
+                        <ArchiveButton
+                          propClass="mx-3 my-1"
+                          key={dItem.id}
+                          onClick={() => handleItemClick(dItem)}
+                          type=""
+                        >
+                          {dItem.name}
+                        </ArchiveButton>
+                      );
+                    })}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
     </PostsLayout>
   );
