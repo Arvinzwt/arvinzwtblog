@@ -34,15 +34,15 @@ export default function Pagination({ total, current, size, path }) {
 
   return (
     <div className="flex items-center justify-center gap-2 my-8 flex-wrap text-sm">
-      {/* 上一页按钮 - 改为左尖角 */}
       <Link
-        href={buildUrl(current - 1)}
+        href={current <= 1 ? "#" : buildUrl(current - 1)}
         className={clsx(
           "px-3 py-1 border border-gray-200 rounded hover:bg-gray-100 transition-colors flex items-center justify-center",
           current <= 1 && "opacity-50 cursor-not-allowed hover:bg-transparent",
         )}
         aria-disabled={current <= 1}
         tabIndex={current <= 1 ? -1 : 0}
+        onClick={(e) => current <= 1 && e.preventDefault()}
       >
         &lt;
       </Link>
@@ -88,7 +88,7 @@ export default function Pagination({ total, current, size, path }) {
             className={clsx(
               "px-4 py-1 border border-gray-200 rounded hover:bg-gray-100 transition-colors",
               current === totalPages &&
-                "bg-blue-500 text-white border-blue-500",
+              "bg-blue-500 text-white border-blue-500",
             )}
           >
             {totalPages}
@@ -96,16 +96,16 @@ export default function Pagination({ total, current, size, path }) {
         </>
       )}
 
-      {/* 下一页按钮 - 改为右尖角 */}
       <Link
-        href={buildUrl(current + 1)}
+        href={current >= totalPages ? "#" : buildUrl(current + 1)}
         className={clsx(
           "px-3 py-1 border border-gray-200 rounded hover:bg-gray-100 transition-colors flex items-center justify-center",
           current >= totalPages &&
-            "opacity-50 cursor-not-allowed hover:bg-transparent",
+          "opacity-50 cursor-not-allowed hover:bg-transparent",
         )}
         aria-disabled={current >= totalPages}
         tabIndex={current >= totalPages ? -1 : 0}
+        onClick={(e) => current >= totalPages && e.preventDefault()}
       >
         &gt;
       </Link>

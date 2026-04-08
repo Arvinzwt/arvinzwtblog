@@ -7,11 +7,11 @@ import { ArchiveTag } from "../../components/ArchiveTag";
 import { useState } from "react";
 import clsx from "clsx";
 import Pagination from "../../components/Pagination";
+import { useRouter } from "next/router"; // 新增
 
 function HighlightText({ text, filterText }) {
-  if (!filterText) return text; // 如果没有筛选条件，返回原文本
+  if (!filterText) return text;
 
-  // 找到匹配的部分
   const regex = new RegExp(`(${filterText})`, "gi");
   const parts = text.split(regex);
 
@@ -31,6 +31,7 @@ function HighlightText({ text, filterText }) {
 }
 
 export default function Posts({ allPostsData, allTagData, pagination }) {
+  const router = useRouter(); // 新增
   const [tag, setTag] = useState("");
   const [filterText, setFilterText] = useState("");
 
@@ -42,12 +43,18 @@ export default function Posts({ allPostsData, allTagData, pagination }) {
       return aItem.tag.includes(tag);
     });
 
+  // 点击标签时 → 重置分页到第 1 页
   function handleTagTap(rTag) {
     if (tag === rTag) {
       setTag("");
     } else {
       setTag(rTag);
     }
+    // 强制跳转到第 1 页
+    router.push({
+      pathname: "/posts",
+      query: { page: 1 }, // 重置页码
+    });
   }
 
   return (
@@ -81,6 +88,7 @@ export default function Posts({ allPostsData, allTagData, pagination }) {
                     propClass={clsx([
                       `cursor-pointer`,
                       "mx-3",
+                      "border solid border-red-500",
                       {
                         "text-white bg-blue-500": rItem === tag,
                       },
@@ -139,8 +147,8 @@ export default function Posts({ allPostsData, allTagData, pagination }) {
 }
 
 export async function getServerSideProps({ query = {} }) {
-  const currentPage = Number(query.page) || 1; // 默认第一页
-  const pageSize = 15; // 每页文章数量
+  const currentPage = Number(query.page) || 1;
+  const pageSize = 15;
 
   const postsData = getSortedPostsData(currentPage, pageSize);
   const allTagData = getSortedTagData();
